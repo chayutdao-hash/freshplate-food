@@ -1710,7 +1710,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <article class="recipe-card" data-id="${recipe.id}">
           <div class="card-media-wrap">
-            <img class="card-img" src="${recipe.image}" alt="${recipe.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; if('${recipe.fallbackImage || ''}') this.src='${recipe.fallbackImage}';">
+            <img class="card-img" src="${recipe.image}" alt="${recipe.title}">
             <div class="card-floating-top">
               <span class="difficulty-badge ${difficultyClass}">${recipe.difficultyTh}</span>
               <button class="bookmark-btn ${isSaved ? 'saved' : ''}" data-id="${recipe.id}" title="${isSaved ? 'นำออกจากเมนูโปรด' : 'บันทึกเป็นเมนูโปรด'}">
@@ -1867,7 +1867,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isSaved = state.savedRecipeIds.has(recipe.id);
       return `
         <div class="draggable-recipe-item" draggable="true" data-id="${recipe.id}">
-          <img class="draggable-thumb" src="${recipe.image}" alt="${recipe.title}" referrerpolicy="no-referrer" onerror="this.onerror=null; if('${recipe.fallbackImage || ''}') this.src='${recipe.fallbackImage}';">
+          <img class="draggable-thumb" src="${recipe.image}" alt="${recipe.title}">
           <div class="draggable-info">
             <div class="draggable-name">${recipe.title}</div>
             <div class="draggable-meta">
@@ -1958,7 +1958,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="meal-slot-label">${meal.icon} ${meal.th}</div>
             ${recipe ? `
               <div class="filled-meal-card" data-id="${recipe.id}">
-                <img class="filled-thumb" src="${recipe.image}" alt="${recipe.title}" referrerpolicy="no-referrer" onerror="this.onerror=null; if('${recipe.fallbackImage || ''}') this.src='${recipe.fallbackImage}';">
+                <img class="filled-thumb" src="${recipe.image}" alt="${recipe.title}">
                 <div class="filled-details">
                   <div class="filled-title" title="${recipe.title}">${recipe.title}</div>
                   <div class="filled-kcal">${recipe.calories} kcal</div>
