@@ -1,0 +1,18 @@
+# Netlify Configuration for FreshPlate
+[build]
+  publish = "."
+
+# 1. Reverse Proxy for API requests:
+# Netlify will forward any /api/* request directly to your Backend Server (e.g. Render)
+# NOTE: Replace 'https://YOUR_BACKEND_URL.onrender.com' with your actual Render URL
+[[redirects]]
+  from = "/api/*"
+  to = "https://YOUR_BACKEND_URL.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+# 2. Frontend route fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

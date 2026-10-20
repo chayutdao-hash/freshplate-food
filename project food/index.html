@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreshPlate - คลังสูตรอาหารสุขภาพ & จัดตารางมื้ออาหารประจำสัปดาห์</title>
+  <meta name="description" content="FreshPlate คลังสูตรอาหารสุขภาพ วางแผนมื้ออาหารล่วงหน้า 7 วัน คำนวณสารอาหารและแคลอรีอัตโนมัติ พร้อมค้นหาเมนูจากวัตถุดิบในตู้เย็น">
+
+  <!-- Google Fonts: IBM Plex Sans Thai (Superb Thai legibility), Plus Jakarta Sans & Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- =======================================================================
+       SITE HEADER / TOP NAVIGATION
+       ======================================================================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <!-- Brand Logo -->
+      <a href="#explore" class="brand-logo" id="logoLink">
+        <div class="brand-icon">🥗</div>
+        <div>
+          <div class="brand-name">Fresh<span>Plate</span></div>
+          <span class="brand-tagline">Meal Planner & Recipes</span>
+        </div>
+      </a>
+
+      <!-- View Switcher Tabs -->
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab-btn active" id="tabExplore" data-target="exploreView" role="tab" aria-selected="true">
+          <span>🔍</span> คลังสูตรอาหาร
+        </button>
+        <button class="nav-tab-btn" id="tabPlanner" data-target="plannerView" role="tab" aria-selected="false">
+          <span>📅</span> วางแผนมื้ออาหาร
+          <span class="tab-badge" id="navPlannerCount">0</span>
+        </button>
+        <button class="nav-tab-btn" id="tabDetail" data-target="detailView" role="tab" aria-selected="false">
+          <span>📖</span> รายละเอียดสูตร
+        </button>
+      </nav>
+
+      <!-- Action Buttons & User Area -->
+      <div class="header-actions">
+        <!-- Supabase Status & Config Trigger -->
+        <button class="btn-header-supabase" id="btnOpenSupabaseModal" title="ตั้งค่า Supabase Database & Auth">
+          <span class="supabase-icon">⚡</span>
+          <span class="supabase-label">Supabase</span>
+          <span class="supabase-status-dot" id="headerSupabaseDot" title="สถานะการเชื่อมต่อ Supabase"></span>
+        </button>
+
+        <!-- Fridge Pantry Search Trigger -->
+        <button class="btn-header-pantry" id="btnOpenPantryHeader">
+          <span>❄️</span> ของในตู้เย็น
+        </button>
+
+        <!-- Shopping List Modal Trigger -->
+        <button class="btn-header-shopping" id="btnOpenShoppingHeader" title="รายการซื้อของประจำสัปดาห์">
+          🛒
+          <span class="badge-count" id="headerShoppingCount">0</span>
+        </button>
+
+        <!-- User Authentication & Account Area -->
+        <div class="user-account-area" id="userAccountArea">
+          <!-- Rendered dynamically by JS: Guest Login/Register or Logged-in Profile -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =======================================================================
+       MAIN CONTENT CONTAINER
+       ======================================================================= -->
+  <main class="container">
+
+    <!-- =====================================================================
+         VIEW 1: EXPLORE & SEARCH PAGE (หน้าคลังสูตรอาหาร)
+         ===================================================================== -->
+    <section class="view-section active" id="exploreView">
+      <!-- Hero Section -->
+      <div class="explore-hero">
+        <div class="explore-hero-badge">
+          ✨ คัดสรรสูตรอาหารคลีน สุขภาพดี ทำง่าย พร้อมคำนวณแคลอรี
+        </div>
+        <h1 class="explore-title">
+          ค้นหาเมนูอร่อย <span class="highlight-green">สุขภาพดี</span> สไตล์<span class="highlight-orange">คุณ</span>
+        </h1>
+        <p class="explore-subtitle">
+          เลือกทำอาหารที่คุณรัก หรือค้นหาเมนูสร้างสรรค์จากวัตถุดิบที่เหลือในตู้เย็นของคุณได้ทันที
+        </p>
+
+        <!-- Search Bar with Fridge Pantry Filter Trigger -->
+        <div class="search-bar-wrapper">
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="recipeSearchInput" class="search-input" placeholder="พิมพ์ชื่อเมนู หรือวัตถุดิบ เช่น แซลมอน, อกไก่, ควินัว..." autocomplete="off">
+            <button class="clear-search-btn" id="btnClearSearch" title="ล้างการค้นหา">✕</button>
+            <button class="btn-pantry-trigger" id="btnPantryTrigger">
+              <span>❄️</span> วัตถุดิบในตู้เย็น
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Badges Row -->
+        <div class="quick-badges-container">
+          <span class="badge-label">แท็กด่วน:</span>
+          <button class="quick-badge-btn" data-badge="all">ทั้งหมด</button>
+          <button class="quick-badge-btn" data-badge="< 15 นาที">⚡ &lt; 15 นาที</button>
+          <button class="quick-badge-btn" data-badge="คลีน">🥗 คลีน</button>
+          <button class="quick-badge-btn" data-badge="คีโต">🥑 คีโต</button>
+          <button class="quick-badge-btn" data-badge="โปรตีนสูง">💪 โปรตีนสูง</button>
+          <button class="quick-badge-btn" data-badge="งบประหยัด">🪙 งบประหยัด</button>
+          <button class="quick-badge-btn" data-badge="มังสวิรัติ">🌱 มังสวิรัติ</button>
+          <button class="quick-badge-btn" data-badge="saved">❤️ เมนูโปรด</button>
+        </div>
+      </div>
+
+      <!-- Controls Row: Category Pills & Stats -->
+      <div class="explore-controls-row">
+        <div class="category-pills">
+          <button class="category-pill active" data-cat="all">ทุกหมวดหมู่</button>
+          <button class="category-pill" data-cat="main">จานหลัก</button>
+          <button class="category-pill" data-cat="bowl">โบวล์สุขภาพ</button>
+          <button class="category-pill" data-cat="salad">สลัดสด</button>
+          <button class="category-pill" data-cat="soup">ต้ม/ซุป</button>
+          <button class="category-pill" data-cat="snack">ของว่าง/เช้า</button>
+        </div>
+        <div class="results-stats" id="resultsCountText">
+          พบสูตรอาหารทั้งหมด <strong>12</strong> รายการ
+        </div>
+      </div>
+
+      <!-- Main Recipe Grid (3-4 Columns on Desktop) -->
+      <div class="recipe-grid" id="recipeGrid">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+
+
+    <!-- =====================================================================
+         VIEW 2: WEEKLY MEAL PLANNER DASHBOARD (หน้าวางแผนมื้ออาหาร)
+         ===================================================================== -->
+    <section class="view-section" id="plannerView">
+      <!-- Planner Header Bar -->
+      <div class="planner-header-bar">
+        <div class="planner-title-group">
+          <h1>วางแผนมื้ออาหารประจำสัปดาห์ 🗓️</h1>
+          <p>ลากวางเมนูโปรดลงตารางเพื่อสร้างโภชนาการที่สมดุลและสร้างรายการซื้อของอัตโนมัติ</p>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+          <!-- Week Navigator -->
+          <div class="planner-week-nav">
+            <button class="nav-arrow-btn" id="btnPrevWeek" title="สัปดาห์ก่อนหน้า">◀</button>
+            <span class="week-label" id="weekRangeLabel">สัปดาห์นี้: 2 ต.ค. - 8 ต.ค.</span>
+            <button class="nav-arrow-btn" id="btnNextWeek" title="สัปดาห์ถัดไป">▶</button>
+          </div>
+          <button class="btn-clear-plan" id="btnClearMealPlan">ล้างตารางทั้งหมด</button>
+        </div>
+      </div>
+
+      <!-- 3-Column Layout: Left Draggable Sidebar | Center Weekly Grid | Right Nutrition Panel -->
+      <div class="planner-workspace-grid">
+
+        <!-- --- Left Sidebar: Saved Recipes & Draggable Pool --- -->
+        <aside class="planner-sidebar">
+          <div class="sidebar-title-row">
+            <h3 class="sidebar-title">
+              <span>📌</span> คลังเมนูแนะนำ
+            </h3>
+            <span class="drag-instruction">ลากไปวางในตาราง</span>
+          </div>
+
+          <div class="sidebar-search-box">
+            <span class="sidebar-search-icon">🔍</span>
+            <input type="text" id="sidebarSearchInput" class="sidebar-search-input" placeholder="ค้นหาเมนูในคลัง...">
+          </div>
+
+          <div class="sidebar-recipe-list" id="sidebarRecipeList">
+            <!-- Rendered dynamically as draggable items -->
+          </div>
+        </aside>
+
+        <!-- --- Center Workspace: 7-Day Weekly Grid --- -->
+        <div class="planner-center-panel">
+          <!-- Day Selector Pills (For quick focus & mobile navigation) -->
+          <div class="day-selector-pills" id="daySelectorPills">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Weekly Days Grid (7 Columns Mon-Sun x 4 Meals) -->
+          <div class="weekly-days-grid" id="weeklyDaysGrid">
+            <!-- Rendered dynamically by JavaScript -->
+          </div>
+        </div>
+
+        <!-- --- Right Panel: Nutrition Progress Summary --- -->
+        <aside class="planner-nutrition-panel">
+          <div class="nutrition-panel-header">
+            <h3 class="nutrition-panel-title">สรุปโภชนาการ</h3>
+            <span class="nutrition-day-tag" id="nutritionDayTag">วันจันทร์</span>
+          </div>
+
+          <!-- Calories Target Ring / Card -->
+          <div class="calorie-target-card">
+            <div class="calorie-dial-wrap">
+              <svg class="circular-chart" viewBox="0 0 36 36">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circle-progress" id="calorieCircleProgress"
+                  stroke-dasharray="0, 100"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+              <div class="dial-center-text">
+                <span class="dial-percent" id="dialPercentText">0%</span>
+              </div>
+            </div>
+
+            <div class="calorie-target-info">
+              <span class="cal-info-label">พลังงานรวมทั้งวัน</span>
+              <div class="cal-current-val"><span id="calCurrentText">0</span> <span>/ <span id="calTargetText">2,000</span> kcal</span></div>
+              <div class="cal-target-target" id="calRemainingText">เหลืออีก 2,000 kcal</div>
+            </div>
+          </div>
+
+          <!-- Macro Nutrients Progress Bars -->
+          <div class="macro-progress-list">
+            <!-- Protein -->
+            <div class="macro-bar-item">
+              <div class="macro-bar-label-row">
+                <span class="macro-name">
+                  <span class="macro-color-dot" style="background: var(--macro-protein);"></span>
+                  โปรตีน (Protein)
+                </span>
+                <span class="macro-val" id="proteinValText">0g / 130g</span>
+              </div>
+              <div class="macro-progress-track">
+                <div class="macro-progress-fill" id="proteinProgressFill" style="background: var(--macro-protein); width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Carbs -->
+            <div class="macro-bar-item">
+              <div class="macro-bar-label-row">
+                <span class="macro-name">
+                  <span class="macro-color-dot" style="background: var(--macro-carbs);"></span>
+                  คาร์บ (Carbs)
+                </span>
+                <span class="macro-val" id="carbsValText">0g / 210g</span>
+              </div>
+              <div class="macro-progress-track">
+                <div class="macro-progress-fill" id="carbsProgressFill" style="background: var(--macro-carbs); width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Fat -->
+            <div class="macro-bar-item">
+              <div class="macro-bar-label-row">
+                <span class="macro-name">
+                  <span class="macro-color-dot" style="background: var(--macro-fat);"></span>
+                  ไขมันดี (Fat)
+                </span>
+                <span class="macro-val" id="fatValText">0g / 65g</span>
+              </div>
+              <div class="macro-progress-track">
+                <div class="macro-progress-fill" id="fatProgressFill" style="background: var(--macro-fat); width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Fiber -->
+            <div class="macro-bar-item">
+              <div class="macro-bar-label-row">
+                <span class="macro-name">
+                  <span class="macro-color-dot" style="background: var(--macro-fiber);"></span>
+                  ใยอาหาร (Fiber)
+                </span>
+                <span class="macro-val" id="fiberValText">0g / 30g</span>
+              </div>
+              <div class="macro-progress-track">
+                <div class="macro-progress-fill" id="fiberProgressFill" style="background: var(--macro-fiber); width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Health / Target Alert Card -->
+          <div class="nutrition-alert-card alert-good" id="nutritionAlertCard">
+            <span class="alert-icon">✨</span>
+            <div id="nutritionAlertText">
+              เริ่มจัดตารางอาหารเพื่อตรวจสอบความสมดุลของแคลอรีและสารอาหาร
+            </div>
+          </div>
+
+          <!-- Action CTA: Generate Shopping List -->
+          <button class="btn-generate-shopping" id="btnGenerateShopping">
+            <span>🛒</span> สร้างรายการซื้อของสัปดาห์นี้
+          </button>
+        </aside>
+
+      </div>
+    </section>
+
+
+    <!-- =====================================================================
+         VIEW 3: RECIPE DETAIL VIEW (หน้าแสดงรายละเอียดสูตรอาหาร - SPLIT VIEW)
+         ===================================================================== -->
+    <section class="view-section" id="detailView">
+      <!-- Breadcrumb Navigation Bar -->
+      <div class="recipe-detail-header-nav">
+        <button class="btn-back-explore" id="btnBackToExplore">
+          ← กลับไปคลังสูตรอาหาร
+        </button>
+        <span style="font-size:0.85rem; color:var(--text-light);" id="recipeCategoryBreadcrumb">
+          หมวดหมู่: โบวล์สุขภาพ
+        </span>
+      </div>
+
+      <!-- Desktop Split View (2 Columns) -->
+      <div class="detail-split-container">
+
+        <!-- --- Left Column: Media & Ingredients --- -->
+        <div class="detail-left-col">
+          <!-- Hero Food Image -->
+          <div class="detail-hero-media">
+            <img id="detailHeroImg" class="detail-hero-img" src="" alt="Recipe Detail">
+            <div class="detail-media-badges">
+              <span class="difficulty-badge difficulty-easy" id="detailDifficultyBadge">ง่ายมาก</span>
+              <div class="detail-time-kcal-pill">
+                <span id="detailTimeBadge">⏱️ 12 นาที</span>
+                <span id="detailKcalBadge">🔥 420 kcal/จาน</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Servings Stepper Component -->
+          <div class="servings-stepper-card">
+            <div class="stepper-label-group">
+              <h4>จำนวนเสิร์ฟ (Servings)</h4>
+              <p>ปริมาณวัตถุดิบจะคำนวณปรับตามอัตโนมัติ</p>
+            </div>
+            <div class="stepper-controls">
+              <button class="stepper-btn" id="btnServingMinus" title="ลดจำนวนเสิร์ฟ">−</button>
+              <div class="stepper-value" id="currentServingValue">2 ที่</div>
+              <button class="stepper-btn" id="btnServingPlus" title="เพิ่มจำนวนเสิร์ฟ">+</button>
+            </div>
+          </div>
+
+          <!-- Ingredients Checklist Card -->
+          <div class="ingredients-card">
+            <div class="ingredients-card-header">
+              <h3>
+                <span>🥗</span> วัตถุดิบที่ต้องใช้
+              </h3>
+              <button class="btn-add-all-shopping" id="btnAddRecipeToShopping">
+                + เพิ่มวัตถุดิบเข้าช้อปปิ้งลิสต์
+              </button>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:14px;">
+              ติ๊กถูกที่วัตถุดิบเพื่อตรวจสอบของที่เตรียมเสร็จแล้ว
+            </p>
+            <ul class="ingredients-list" id="detailIngredientsList">
+              <!-- Rendered dynamically by JavaScript -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- --- Right Column: Cooking Steps & Nutrition --- -->
+        <div class="detail-right-col">
+          <!-- Recipe Header Information -->
+          <div class="detail-recipe-header">
+            <div class="detail-tags-row" id="detailTagsRow">
+              <!-- Tags rendered by JS -->
+            </div>
+            <h1 class="detail-title" id="detailTitleText">แซลมอนโปเกโบวล์และควินัว</h1>
+            <div class="detail-title-en" id="detailTitleEnText">Salmon Poke Bowl with Quinoa</div>
+            <p class="detail-description" id="detailDescText">
+              แซลมอนสดหั่นเต๋าคลุกเคล้าโชยุยูซุ เสิร์ฟบนควินัวและข้าวกล้อง...
+            </p>
+
+            <!-- Actions: Add to Meal Plan & Bookmark -->
+            <div class="detail-quick-actions">
+              <button class="btn-detail-add-planner" id="btnDetailAddToPlan">
+                <span>➕</span> ใส่ในตารางมื้ออาหาร
+              </button>
+              <button class="btn-detail-bookmark" id="btnDetailBookmark">
+                <span>🤍</span> บันทึกเข้าเมนูโปรด
+              </button>
+            </div>
+          </div>
+
+          <!-- Nutrition Breakdown Card (Macro Nutrients) -->
+          <div class="nutrition-breakdown-card">
+            <div class="nutrition-breakdown-header">
+              <h4>สารอาหารต่อ 1 เสิร์ฟ (Macro Nutrients)</h4>
+              <span style="font-size:0.8rem; color:var(--text-muted);">ต่อเสิร์ฟ</span>
+            </div>
+            <div class="nutrition-chips-grid">
+              <div class="macro-chip-box">
+                <span class="macro-chip-label">🔥 แคลอรี</span>
+                <div class="macro-chip-val" id="chipCalText">420</div>
+                <span style="font-size:0.68rem; color:var(--text-light);">kcal</span>
+              </div>
+              <div class="macro-chip-box">
+                <span class="macro-chip-label" style="color:var(--macro-protein);">💪 โปรตีน</span>
+                <div class="macro-chip-val" id="chipProteinText">36g</div>
+                <span style="font-size:0.68rem; color:var(--text-light);">กรัม</span>
+              </div>
+              <div class="macro-chip-box">
+                <span class="macro-chip-label" style="color:var(--macro-carbs);">🌾 คาร์บ</span>
+                <div class="macro-chip-val" id="chipCarbsText">45g</div>
+                <span style="font-size:0.68rem; color:var(--text-light);">กรัม</span>
+              </div>
+              <div class="macro-chip-box">
+                <span class="macro-chip-label" style="color:var(--macro-fat);">🥑 ไขมัน</span>
+                <div class="macro-chip-val" id="chipFatText">14g</div>
+                <span style="font-size:0.68rem; color:var(--text-light);">กรัม</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step-by-Step Cooking Instructions & Timers -->
+          <div class="steps-container">
+            <h3 class="steps-heading">
+              <span>👨‍🍳</span> ขั้นตอนการทำทีละขั้นตอน
+            </h3>
+            <div id="detailStepsList" style="display:flex; flex-direction:column; gap:16px;">
+              <!-- Rendered dynamically by JavaScript with interactive countdown timers -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- =======================================================================
+       MODAL: AUTHENTICATION (เข้าสู่ระบบ / สมัครสมาชิก)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="authModalBackdrop">
+    <div class="modal-box" style="max-width: 470px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="authModalTitle">
+          <span>🌿</span> ยินดีต้อนรับสู่ FreshPlate
+        </h3>
+        <button class="btn-close-modal" id="btnCloseAuthModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Inline Alert / Error Notice -->
+        <div class="auth-alert-box" id="authAlertBox" style="display:none;" role="alert"></div>
+
+        <!-- Auth Tabs: Login vs Register -->
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" id="tabAuthLogin">เข้าสู่ระบบ</button>
+          <button class="auth-tab-btn" id="tabAuthRegister">สมัครสมาชิกใหม่</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="formLogin">
+          <!-- Google Sign In Button -->
+          <button type="button" class="btn-google-auth" id="btnGoogleLogin">
+            <svg class="google-icon" viewBox="0 0 48 48" width="20" height="20">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span class="btn-text">เข้าสู่ระบบด้วย Google</span>
+          </button>
+
+          <div class="auth-divider">
+            <span>หรือเข้าสู่ระบบด้วยอีเมล</span>
+          </div>
+
+          <div class="auth-form-group">
+            <label class="auth-label" for="loginEmail">อีเมล (Email)</label>
+            <input type="email" id="loginEmail" class="auth-input" placeholder="name@example.com" required autocomplete="email">
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="loginPassword">รหัสผ่าน (Password)</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="loginPassword" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="btn-toggle-pw" data-target="loginPassword" title="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+            </div>
+          </div>
+
+          <div class="auth-options-row">
+            <label class="auth-checkbox-label">
+              <input type="checkbox" id="loginRememberMe" checked>
+              <span>จดจำการเข้าสู่ระบบ</span>
+            </label>
+            <button type="button" class="btn-forgot-pw" id="btnOpenForgotModal">ลืมรหัสผ่าน?</button>
+          </div>
+
+          <button type="submit" class="btn-generate-shopping auth-submit-btn" id="btnLoginSubmit" style="width:100%; margin-top:14px; padding:12px;">
+            <span class="btn-text">เข้าสู่ระบบ 🚀</span>
+          </button>
+
+          <!-- Quick One-Click Demo Logins -->
+          <div class="quick-demo-logins">
+            <div class="demo-title">⚡ หรือเข้าใช้งานด่วน (One-Click Demo)</div>
+            <div class="demo-btn-group">
+              <button type="button" class="btn-demo-quick" id="btnQuickLoginAdmin">
+                <span>👑</span> แอดมิน / โค้ช
+              </button>
+              <button type="button" class="btn-demo-quick" id="btnQuickLoginUser">
+                <span>👤</span> ผู้ใช้งานตัวอย่าง
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Register Form -->
+        <form id="formRegister" style="display:none;">
+          <!-- Google Sign Up Button -->
+          <button type="button" class="btn-google-auth" id="btnGoogleRegister">
+            <svg class="google-icon" viewBox="0 0 48 48" width="20" height="20">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span class="btn-text">สมัครสมาชิกด่วนด้วย Google</span>
+          </button>
+
+          <div class="auth-divider">
+            <span>หรือกรอกข้อมูลสมัครสมาชิกใหม่</span>
+          </div>
+
+          <div class="auth-form-group">
+            <label class="auth-label" for="regName">ชื่อ-นามสกุล หรือชื่อเรียกในระบบ</label>
+            <input type="text" id="regName" class="auth-input" placeholder="เช่น นภัทร สุขภาพดี" required autocomplete="name">
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="regEmail">อีเมลสำหรับการเข้าสู่ระบบ</label>
+            <input type="email" id="regEmail" class="auth-input" placeholder="name@example.com" required autocomplete="email">
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="regPassword">ตั้งรหัสผ่าน (อย่างน้อย 6 ตัวอักษร)</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPassword" class="auth-input" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+              <button type="button" class="btn-toggle-pw" data-target="regPassword" title="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+            </div>
+            <!-- Password Strength Bar -->
+            <div class="pw-strength-container" id="regPwStrength">
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwStrengthFill"></div></div>
+              <span class="pw-strength-text" id="pwStrengthText">ความปลอดภัยรหัสผ่าน</span>
+            </div>
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="regPasswordConfirm">ยืนยันรหัสผ่านอีกครั้ง</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPasswordConfirm" class="auth-input" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+              <button type="button" class="btn-toggle-pw" data-target="regPasswordConfirm" title="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+            </div>
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="regTargetCalories">เป้าหมายพลังงานต่อวัน (Kcal)</label>
+            <input type="number" id="regTargetCalories" class="auth-input" value="2000" min="1000" max="4500" step="50">
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="regGoal">เป้าหมายสุขภาพหลักของคุณ</label>
+            <select id="regGoal" class="auth-input">
+              <option value="ลดน้ำหนัก & กระชับสัดส่วน">ลดน้ำหนัก & กระชับสัดส่วน</option>
+              <option value="เพิ่มกล้ามเนื้อ & เสริมโปรตีน">เพิ่มกล้ามเนื้อ & เสริมโปรตีน</option>
+              <option value="ทานคลีนรักษาสุขภาพทั่วไป" selected>ทานคลีนรักษาสุขภาพทั่วไป</option>
+              <option value="ควบคุมน้ำตาล & คีโตจีนิก">ควบคุมน้ำตาล & คีโตจีนิก</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-generate-shopping auth-submit-btn" id="btnRegisterSubmit" style="width:100%; margin-top:14px; padding:12px; background:var(--green-gradient);">
+            <span class="btn-text">สร้างบัญชีสมาชิกฟรี 🌱</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: USER PROFILE & TARGET SETTINGS (ข้อมูลส่วนตัว & ปรับเป้าหมาย)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="profileModalBackdrop">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>⚙️</span> จัดการโปรไฟล์ & เป้าหมายโภชนาการ
+        </h3>
+        <button class="btn-close-modal" id="btnCloseProfileModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-alert-box" id="profileAlertBox" style="display:none;" role="alert"></div>
+
+        <form id="formEditProfile">
+          <!-- User Info Header Card -->
+          <div class="profile-card-header">
+            <div class="profile-avatar-big" id="profileAvatarBig">🌱</div>
+            <div class="profile-info-block">
+              <div class="profile-name-big" id="profileDisplayName">ชื่อสมาชิก</div>
+              <div class="profile-email-badge" id="profileDisplayEmail">email@example.com</div>
+              <span class="profile-role-badge" id="profileDisplayRole">สมาชิกทั่วไป</span>
+            </div>
+          </div>
+
+          <div class="auth-form-group">
+            <label class="auth-label" for="editProfName">ชื่อ-นามสกุล หรือชื่อแสดงผล</label>
+            <input type="text" id="editProfName" class="auth-input" required>
+          </div>
+
+          <div class="auth-form-group">
+            <label class="auth-label" for="editProfGoal">เป้าหมายสุขภาพหลัก</label>
+            <select id="editProfGoal" class="auth-input">
+              <option value="ลดน้ำหนัก & กระชับสัดส่วน">ลดน้ำหนัก & กระชับสัดส่วน</option>
+              <option value="เพิ่มกล้ามเนื้อ & เสริมโปรตีน">เพิ่มกล้ามเนื้อ & เสริมโปรตีน</option>
+              <option value="ทานคลีนรักษาสุขภาพทั่วไป">ทานคลีนรักษาสุขภาพทั่วไป</option>
+              <option value="ควบคุมน้ำตาล & คีโตจีนิก">ควบคุมน้ำตาล & คีโตจีนิก</option>
+            </select>
+          </div>
+
+          <div class="nutrition-target-fieldset">
+            <div class="fieldset-title">🎯 เป้าหมายโภชนาการรายวัน (Nutrition Goals)</div>
+            <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
+              ระบบคำนวณและแสดงผลในวงล้อแคลอรีของหน้าวางแผนมื้ออาหารอัตโนมัติ
+            </p>
+
+            <div class="auth-form-group">
+              <label class="auth-label" for="editProfCalories">พลังงานรวมต่อวัน (Kcal)</label>
+              <input type="number" id="editProfCalories" class="auth-input" min="1000" max="4500" step="50" required>
+            </div>
+
+            <div class="macros-grid-inputs">
+              <div class="auth-form-group">
+                <label class="auth-label" for="editProfProtein">โปรตีน (g)</label>
+                <input type="number" id="editProfProtein" class="auth-input" min="20" max="350" step="5">
+              </div>
+              <div class="auth-form-group">
+                <label class="auth-label" for="editProfCarbs">คาร์โบไฮเดรต (g)</label>
+                <input type="number" id="editProfCarbs" class="auth-input" min="20" max="500" step="5">
+              </div>
+              <div class="auth-form-group">
+                <label class="auth-label" for="editProfFat">ไขมันดี (g)</label>
+                <input type="number" id="editProfFat" class="auth-input" min="10" max="200" step="5">
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer" style="padding:16px 0 0 0; margin-top:16px; border-top:1px solid var(--border-subtle);">
+            <button type="button" class="btn-clear-plan" id="btnCancelProfileEdit">ยกเลิก</button>
+            <button type="submit" class="btn-generate-shopping auth-submit-btn" id="btnSaveProfile">
+              <span class="btn-text">บันทึกข้อมูล ✨</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: CHANGE PASSWORD (เปลี่ยนรหัสผ่าน)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="changePasswordModalBackdrop">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>🔑</span> เปลี่ยนรหัสผ่านใหม่
+        </h3>
+        <button class="btn-close-modal" id="btnCloseChangePwModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-alert-box" id="changePwAlertBox" style="display:none;" role="alert"></div>
+
+        <form id="formChangePassword">
+          <div class="auth-form-group">
+            <label class="auth-label" for="currPassword">รหัสผ่านปัจจุบัน</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="currPassword" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="btn-toggle-pw" data-target="currPassword" title="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+            </div>
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="newPassword">รหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="newPassword" class="auth-input" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+              <button type="button" class="btn-toggle-pw" data-target="newPassword" title="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+            </div>
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="newPasswordConfirm">ยืนยันรหัสผ่านใหม่อีกครั้ง</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="newPasswordConfirm" class="auth-input" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+              <button type="button" class="btn-toggle-pw" data-target="newPasswordConfirm" title="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+            </div>
+          </div>
+          <button type="submit" class="btn-generate-shopping auth-submit-btn" id="btnChangePwSubmit" style="width:100%; margin-top:14px; padding:12px;">
+            <span class="btn-text">อัปเดตรหัสผ่านใหม่ 🔒</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: FORGOT PASSWORD / ASSISTANCE (ลืมรหัสผ่าน / ช่วยเหลือ)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="forgotModalBackdrop">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>💡</span> ช่วยเหลือการเข้าสู่ระบบ
+        </h3>
+        <button class="btn-close-modal" id="btnCloseForgotModal">✕</button>
+      </div>
+      <div class="modal-body" style="font-size:0.9rem; line-height:1.6; color:var(--text-muted);">
+        <p style="margin-bottom:12px;">
+          ระบบ FreshPlate จัดเตรียมบัญชีทดสอบที่พร้อมใช้งานทันที ได้แก่:
+        </p>
+        <div style="background:var(--bg-subtle); padding:12px 16px; border-radius:10px; margin-bottom:14px; border:1px solid var(--border-subtle); font-size:0.84rem;">
+          <div style="margin-bottom:6px;">👑 <strong>บัญชีผู้ดูแล/แอดมิน:</strong> <code>admin@freshplate.com</code> / รหัสผ่าน <code>admin1234</code></div>
+          <div>👤 <strong>บัญชีผู้ใช้งานทั่วไป:</strong> <code>user@freshplate.com</code> / รหัสผ่าน <code>user1234</code></div>
+        </div>
+        <p style="margin-bottom:16px;">
+          หรือคุณสามารถสมัครสมาชิกใหม่ฟรีด้วยอีเมลของคุณเองได้ทันทีโดยไม่ต้องยืนยันอีเมลค่ะ
+        </p>
+        <button type="button" class="btn-generate-shopping" id="btnFillForgotUser" style="width:100%; padding:10px;">
+          เข้าสู่ระบบด้วยบัญชีตัวอย่างทันที 🚀
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: USER CONSULTATION (ปรึกษาโภชนาการสำหรับ User)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="consultationModalBackdrop">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>💬</span> ปรึกษาโภชนาการ & รับคำแนะนำ
+        </h3>
+        <button class="btn-close-modal" id="btnCloseConsultModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="consult-tabs">
+          <button class="consult-tab-btn active" id="tabConsultNew">ส่งคำถามใหม่</button>
+          <button class="consult-tab-btn" id="tabConsultHistory">
+            ประวัติคำแนะนำของฉัน (<span id="userConsultCount">0</span>)
+          </button>
+        </div>
+
+        <!-- Tab 1: New Question Form -->
+        <form id="formNewConsultation">
+          <div class="auth-form-group">
+            <label class="auth-label" for="consultSubject">หัวข้อคำถาม</label>
+            <input type="text" id="consultSubject" class="auth-input" placeholder="เช่น ขอคำแนะนำมื้อเย็นหลังออกกำลังกาย, แพลนคีโต 7 วัน" required>
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="consultHealthGoal">เป้าหมายสุขภาพปัจจุบัน</label>
+            <input type="text" id="consultHealthGoal" class="auth-input" placeholder="เช่น เพิ่มกล้ามเนื้อ, ลดไขมัน, ฟื้นฟูระบบเผาผลาญ">
+          </div>
+          <div class="auth-form-group">
+            <label class="auth-label" for="consultQuestion">รายละเอียดคำถามหรือข้อสงสัย</label>
+            <textarea id="consultQuestion" class="auth-input" style="min-height:110px; resize:vertical;" placeholder="พิมพ์คำถามเกี่ยวกับอาหาร สัดส่วนแคลอรี หรือวัตถุดิบที่คุณต้องการให้นักโภชนาการช่วยแนะนำ..." required></textarea>
+          </div>
+          <button type="submit" class="btn-generate-shopping" style="width:100%; padding:12px;">
+            ส่งคำถามถึงผู้เชี่ยวชาญ / Admin 📨
+          </button>
+        </form>
+
+        <!-- Tab 2: User History & Replies -->
+        <div id="consultationHistoryList" style="display:none;">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: ADMIN DASHBOARD (ระบบจัดการ & ตอบคำแนะนำสำหรับ Admin)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="adminDashboardModalBackdrop">
+    <div class="modal-box" style="max-width: 760px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>🛡️</span> แดชบอร์ดผู้ดูแลระบบ & ให้คำแนะนำโภชนาการ
+        </h3>
+        <button class="btn-close-modal" id="btnCloseAdminModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Stats Row -->
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <div class="stat-label">👥 สมาชิกทั่วไป</div>
+            <div class="stat-num" id="statTotalUsers">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-label">📩 คำถามทั้งหมด</div>
+            <div class="stat-num" id="statTotalConsults">0</div>
+          </div>
+          <div class="admin-stat-card" style="border-color:#fef08a;">
+            <div class="stat-label" style="color:#b45309;">⏳ รอคำตอบ</div>
+            <div class="stat-num" id="statPendingConsults" style="color:#b45309;">0</div>
+          </div>
+          <div class="admin-stat-card" style="border-color:#bbf7d0;">
+            <div class="stat-label" style="color:var(--green-700);">✅ ให้คำแนะนำแล้ว</div>
+            <div class="stat-num" id="statAnsweredConsults" style="color:var(--green-700);">0</div>
+          </div>
+        </div>
+
+        <!-- Admin View Switcher: Queue vs User Directory -->
+        <div class="consult-tabs">
+          <button class="consult-tab-btn active" id="tabAdminQueue">
+            รายการคำถามจากผู้ใช้ (<span id="adminQueueCount">0</span>)
+          </button>
+          <button class="consult-tab-btn" id="tabAdminUserDir">
+            ทำเนียบสมาชิกในระบบ
+          </button>
+        </div>
+
+        <!-- Queue Section -->
+        <div id="adminQueueSection">
+          <div class="admin-filter-bar">
+            <span style="font-size:0.84rem; color:var(--text-muted);">กรองสถานะ:</span>
+            <div style="display:flex; gap:6px;">
+              <button class="category-pill active" data-admin-filter="all">ทั้งหมด</button>
+              <button class="category-pill" data-admin-filter="pending">รอตอบ</button>
+              <button class="category-pill" data-admin-filter="answered">ตอบแล้ว</button>
+            </div>
+          </div>
+
+          <div id="adminConsultationsList">
+            <!-- Questions rendered by JS -->
+          </div>
+        </div>
+
+        <!-- User Directory Section -->
+        <div id="adminUserDirSection" style="display:none;">
+          <table class="user-dir-table">
+            <thead>
+              <tr>
+                <th>ชื่อสมาชิก</th>
+                <th>อีเมล</th>
+                <th>เป้าหมายแคลอรี</th>
+                <th>เป้าหมายสุขภาพ</th>
+                <th>คำถามที่ส่ง</th>
+              </tr>
+            </thead>
+            <tbody id="adminUserDirTableBody">
+              <!-- Users rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: PANTRY SEARCH (ค้นหาจากวัตถุดิบในตู้เย็น)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="pantryModalBackdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>❄️</span> วัตถุดิบในตู้เย็นของฉัน (Pantry Search)
+        </h3>
+        <button class="btn-close-modal" id="btnClosePantryModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:14px;">
+          เลือกวัตถุดิบที่คุณมีในตู้เย็น ระบบจะคัดกรองสูตรอาหารที่ทำได้ทันทีโดยไม่ต้องออกไปซื้อเพิ่ม
+        </p>
+
+        <div class="pantry-tags-grid" id="pantryTagsGrid">
+          <!-- Rendered dynamically from PANTRY_ITEMS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-clear-plan" id="btnClearPantrySelection">ล้างการเลือก</button>
+        <button class="btn-generate-shopping" id="btnApplyPantryFilter" style="padding:10px 22px;">
+          แสดงสูตรอาหารที่ทำได้ (<span id="pantryMatchCount">12</span>)
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: WEEKLY SHOPPING LIST (รายการซื้อของประจำสัปดาห์)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="shoppingModalBackdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>🛒</span> รายการซื้อของประจำสัปดาห์ (Shopping List)
+        </h3>
+        <button class="btn-close-modal" id="btnCloseShoppingModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:16px;">
+          รวบรวมวัตถุดิบทั้งหมดจากตารางมื้ออาหารที่คุณจัดไว้ในสัปดาห์นี้ แบ่งตามหมวดหมู่เพื่อความสะดวกเวลาไปซูเปอร์มาร์เก็ต
+        </p>
+
+        <div id="shoppingListContainer">
+          <!-- Categorized ingredient rows rendered by JavaScript -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-clear-plan" id="btnClearBoughtItems">ล้างรายการที่ซื้อแล้ว</button>
+        <button class="btn-generate-shopping" id="btnCopyShoppingList" style="padding:10px 20px;">
+          📋 คัดลอกรายการ
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: ADD TO PLANNER MODAL (เลือกวันและมื้ออาหาร)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="addToPlanModalBackdrop">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>📅</span> เพิ่มเข้าตารางมื้ออาหาร
+        </h3>
+        <button class="btn-close-modal" id="btnCloseAddPlanModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border-subtle);">
+          <img id="modalAddPlanThumb" src="" style="width:52px; height:52px; border-radius:10px; object-fit:cover;">
+          <div>
+            <div id="modalAddPlanTitle" style="font-weight:700; font-size:0.95rem;">ชื่อเมนู</div>
+            <div id="modalAddPlanKcal" style="font-size:0.8rem; color:var(--orange-600); font-weight:700;">420 kcal</div>
+          </div>
+        </div>
+
+        <form class="planner-picker-form" id="formAddToPlanner">
+          <div class="picker-select-group">
+            <label for="selectPlanDay">เลือกวันในสัปดาห์</label>
+            <select id="selectPlanDay" class="picker-select">
+              <option value="monday">วันจันทร์ (Monday)</option>
+              <option value="tuesday">วันอังคาร (Tuesday)</option>
+              <option value="wednesday">วันพุธ (Wednesday)</option>
+              <option value="thursday">วันพฤหัสบดี (Thursday)</option>
+              <option value="friday">วันศุกร์ (Friday)</option>
+              <option value="saturday">วันเสาร์ (Saturday)</option>
+              <option value="sunday">วันอาทิตย์ (Sunday)</option>
+            </select>
+          </div>
+
+          <div class="picker-select-group">
+            <label for="selectPlanMeal">เลือกมื้ออาหาร</label>
+            <select id="selectPlanMeal" class="picker-select">
+              <option value="breakfast">มื้อเช้า (Breakfast)</option>
+              <option value="lunch">มื้อกลางวัน (Lunch)</option>
+              <option value="dinner">มื้อเย็น (Dinner)</option>
+              <option value="snack">ของว่าง (Snack)</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-clear-plan" id="btnCancelAddPlan">ยกเลิก</button>
+        <button class="btn-generate-shopping" id="btnConfirmAddToPlan" style="padding:10px 22px;">
+          บันทึกลงตาราง
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =======================================================================
+       MODAL: SUPABASE SETTINGS (จัดการการเชื่อมต่อฐานข้อมูล Supabase PostgreSQL)
+       ======================================================================= -->
+  <div class="modal-backdrop" id="supabaseConfigModalBackdrop">
+    <div class="modal-box" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span>⚡</span> ตั้งค่า Supabase (PostgreSQL & Authentication)
+        </h3>
+        <button class="btn-close-modal" id="btnCloseSupabaseModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Connection Status Banner -->
+        <div class="supabase-status-card" id="supabaseStatusCard">
+          <div class="status-indicator-badge" id="supabaseStatusBadge">
+            <span class="status-pulse-dot" id="supabaseStatusDot"></span>
+            <span id="supabaseStatusText">ตรวจสอบสถานะ...</span>
+          </div>
+          <div class="status-desc" id="supabaseStatusDesc">
+            ใช้ Supabase Cloud PostgreSQL บันทึกข้อมูลเมนูอาหาร & Authentication
+          </div>
+        </div>
+
+        <!-- Inline Alert / Error Notice -->
+        <div class="auth-alert-box" id="supabaseAlertBox" style="display:none;" role="alert"></div>
+
+        <!-- Quick Setup Instructions Tab / Accordion -->
+        <div class="supabase-guide-box">
+          <div class="guide-header">
+            <span>📖 วิธีเชื่อมต่อ Supabase ใน 3 นาที:</span>
+            <a href="https://supabase.com/dashboard" target="_blank" rel="noopener" class="guide-link">เปิด Supabase Dashboard ↗</a>
+          </div>
+          <ol class="guide-steps">
+            <li>สร้างโปรเจกต์ใหม่ใน <strong>Supabase Dashboard</strong> (ฟรี)</li>
+            <li>ไปที่ <strong>Project Settings (ฟันเฟือง) &gt; API</strong> &gt; คัดลอก <strong>Project URL</strong> และ <strong>anon public Key</strong></li>
+            <li>วาง URL และ Key ด้านล่างนี้ หรือวางโค้ด <code>createClient(...)</code></li>
+            <li>ไปที่ <strong>SQL Editor</strong> ใน Supabase &gt; รัน <strong>SQL Script</strong> ด้านล่างเพื่อสร้างตารางพร้อมใช้งานทันที!</li>
+          </ol>
+        </div>
+
+        <!-- Config Form -->
+        <form id="formSupabaseConfig">
+          <div class="auth-form-group">
+            <label class="auth-label" for="sbConfigPaste">
+              วางโค้ด Supabase Config:
+              <span class="auth-label-hint">รองรับ <code>createClient(URL, KEY)</code> หรือ JSON</span>
+            </label>
+            <textarea id="sbConfigPaste" class="auth-input supabase-code-textarea" rows="4" placeholder="const supabaseUrl = 'https://xyzcompany.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';"></textarea>
+          </div>
+
+          <details class="supabase-manual-details" open>
+            <summary class="manual-summary">✏️ กรอกแยกทีละช่อง (Project URL & Anon Key)</summary>
+            <div class="manual-fields-grid">
+              <div class="auth-form-group">
+                <label class="auth-label" for="sbUrl">Supabase Project URL</label>
+                <input type="text" id="sbUrl" class="auth-input" value="https://cylphndlcbunpecozagh.supabase.co" placeholder="https://your-project.supabase.co">
+              </div>
+              <div class="auth-form-group">
+                <label class="auth-label" for="sbAnonKey">Anon Public Key</label>
+                <input type="text" id="sbAnonKey" class="auth-input" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5bHBobmRsY2J1bnBlY296YWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTAzODQsImV4cCI6MjEwODA4NjM4NH0.SweJnGOf7xuR7GJYrEtBqJvZ93BgoeUtBsbD4mcc9YM" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI...">
+              </div>
+            </div>
+          </details>
+
+          <!-- Supabase SQL Schema Accordion -->
+          <details class="supabase-rules-details" style="margin-top:12px;">
+            <summary class="manual-summary">📋 ดูโค้ดสร้างตาราง (SQL Script สำหรับ Supabase SQL Editor)</summary>
+            <div class="rules-code-wrapper">
+              <pre class="rules-pre"><code id="supabaseSqlCode">-- 1. ตารางโปรไฟล์ผู้ใช้งาน
+CREATE TABLE IF NOT EXISTS public.users (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT,
+  photo_url TEXT,
+  role TEXT NOT NULL DEFAULT 'user',
+  target_calories INTEGER NOT NULL DEFAULT 2000,
+  target_protein INTEGER NOT NULL DEFAULT 130,
+  target_carbs INTEGER NOT NULL DEFAULT 210,
+  target_fat INTEGER NOT NULL DEFAULT 65,
+  health_goal TEXT DEFAULT 'รักษาสุขภาพทั่วไป',
+  created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()),
+  updated_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW())
+);
+
+-- 2. ตารางแผนอาหารและสูตรอาหารที่บันทึก
+CREATE TABLE IF NOT EXISTS public.user_data (
+  user_id TEXT PRIMARY KEY,
+  meal_plan JSONB,
+  saved_recipes JSONB,
+  updated_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW())
+);
+
+-- 3. ตารางคำปรึกษาโภชนาการ
+CREATE TABLE IF NOT EXISTS public.consultations (
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  user_name TEXT,
+  user_email TEXT,
+  user_photo TEXT,
+  user_target_cal INTEGER DEFAULT 2000,
+  subject TEXT NOT NULL,
+  health_goal TEXT,
+  question TEXT NOT NULL,
+  admin_reply TEXT,
+  replied_by_admin_id TEXT,
+  admin_name TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()),
+  replied_at TIMESTAMPTZ
+);
+
+-- เปิด Row Level Security (RLS) และเปิดสิทธิ์การใช้งาน
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_data ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.consultations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read-write for users" ON public.users FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow public read-write for user_data" ON public.user_data FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow public read-write for consultations" ON public.consultations FOR ALL USING (true) WITH CHECK (true);</code></pre>
+              <button type="button" class="btn-copy-rules" id="btnCopySql">📋 คัดลอก SQL Script</button>
+            </div>
+          </details>
+
+          <div class="supabase-actions-row">
+            <button type="button" class="btn-demo-quick" id="btnTestSupabase">
+              <span>⚡</span> ทดสอบการเชื่อมต่อ
+            </button>
+            <button type="button" class="btn-clear-plan" id="btnClearSupabaseConfig" style="padding:10px 16px;">
+              ล้างค่า
+            </button>
+            <button type="submit" class="btn-generate-shopping auth-submit-btn" id="btnSaveSupabaseConfig" style="padding:10px 22px;">
+              <span class="btn-text">💾 บันทึกและเชื่อมต่อ</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Supabase JS Client v2 (Browser CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Application Scripts -->
+  <script src="supabase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

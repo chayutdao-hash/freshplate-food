@@ -1,0 +1,23 @@
+{
+  "name": "freshplate",
+  "version": "1.0.0",
+  "description": "FreshPlate - Recipe Library & Weekly Meal Planner with Real Authentication and SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test_e2e.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "freshplate",
+    "meal-planner",
+    "nutrition",
+    "recipes",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "ISC"
+}
