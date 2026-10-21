@@ -120,8 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const headerSupabaseDot = document.getElementById('headerSupabaseDot');
   const btnOpenSupabaseModal = document.getElementById('btnOpenSupabaseModal');
   const btnCloseSupabaseModal = document.getElementById('btnCloseSupabaseModal');
-  const btnGoogleLogin = document.getElementById('btnGoogleLogin');
-  const btnGoogleRegister = document.getElementById('btnGoogleRegister');
 
   // =========================================================================
   // 3. TOAST NOTIFICATION SYSTEM
@@ -663,37 +661,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('tabAuthRegister').addEventListener('click', () => switchAuthTab('register'));
   document.getElementById('btnCloseAuthModal').addEventListener('click', closeAuthModal);
 
-  // Google Sign In & Sign Up Handlers (via Supabase OAuth)
-  async function handleGoogleAuthClick() {
-    hideAuthAlert('authAlertBox');
-
-    if (!window.SupabaseService || !window.SupabaseService.isConfigured()) {
-      openSupabaseModal();
-      showAuthAlert('supabaseAlertBox', 'error', 'กรุณาใส่ Supabase Config (URL & Key) ก่อนเพื่อเปิดใช้งาน Google Login และ Supabase PostgreSQL ค่ะ');
-      return;
-    }
-
-    try {
-      showToast('กำลังเชื่อมต่อไปยัง Google ผ่าน Supabase OAuth...', '⏳', 4000);
-      await window.SupabaseService.signInWithGoogle();
-      closeAuthModal();
-    } catch (err) {
-      console.error('Google sign in error:', err);
-      if (err.message === 'CONFIG_REQUIRED') {
-        openSupabaseModal();
-        showAuthAlert('supabaseAlertBox', 'error', 'กรุณาระบุ Supabase URL และ Key ให้ครบถ้วนก่อนค่ะ');
-      } else {
-        showAuthAlert('authAlertBox', 'error', 'การเข้าสู่ระบบด้วย Google ไม่สำเร็จ: ' + (err.message || err));
-      }
-    }
-  }
-
-  if (btnGoogleLogin) {
-    btnGoogleLogin.addEventListener('click', handleGoogleAuthClick);
-  }
-  if (btnGoogleRegister) {
-    btnGoogleRegister.addEventListener('click', handleGoogleAuthClick);
-  }
 
   // Form: Login
   document.getElementById('formLogin').addEventListener('submit', async (e) => {
@@ -1554,7 +1521,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <td>
                 <div style="display:flex; align-items:center; gap:8px;">
                   ${u.photoURL ? `<img src="${escapeHtml(u.photoURL)}" class="user-avatar-img" style="width:24px; height:24px;" alt="${escapeHtml(u.name || '')}">` : '<span>👤</span>'}
-                  <strong>${escapeHtml(u.name || 'ผู้ใช้ Google')}</strong> ${u.role === 'admin' ? '<span style="color:var(--orange-600); font-weight:800;">(Admin)</span>' : ''}
+                  <strong>${escapeHtml(u.name || 'ผู้ใช้ระบบ')}</strong> ${u.role === 'admin' ? '<span style="color:var(--orange-600); font-weight:800;">(Admin)</span>' : ''}
                 </div>
               </td>
               <td>${escapeHtml(u.email || '-')}</td>

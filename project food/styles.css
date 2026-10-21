@@ -3317,42 +3317,6 @@ img.loaded {
   }
 }
 
-/* Google Sign In / Sign Up Button */
-.btn-google-auth {
-  width: 100%;
-  background: #ffffff;
-  color: #3c4043;
-  border: 1.5px solid #dadce0;
-  border-radius: var(--radius-md);
-  padding: 11px 16px;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08);
-  margin-bottom: 6px;
-  position: relative;
-}
-
-.btn-google-auth:hover {
-  background: #f8fafd;
-  border-color: #3ecf8e;
-  box-shadow: 0 4px 14px rgba(62, 207, 142, 0.18);
-  transform: translateY(-1px);
-}
-
-.btn-google-auth:active {
-  transform: translateY(0) scale(0.99);
-}
-
-.google-icon {
-  flex-shrink: 0;
-}
 
 /* Auth Divider */
 .auth-divider {
