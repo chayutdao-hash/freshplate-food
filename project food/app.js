@@ -1665,13 +1665,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 4. Pantry Fridge Filter
       if (state.selectedPantryIds.size > 0) {
-        const selectedKeywords = Array.from(state.selectedPantryIds).map(id => {
+        const hasMatch = Array.from(state.selectedPantryIds).some(id => {
           const item = PANTRY_ITEMS.find(p => p.id === id);
-          return item ? item.name.split('/')[0].trim().toLowerCase() : '';
-        });
-
-        const hasMatch = selectedKeywords.some(keyword => {
-          return recipe.ingredients.some(ing => ing.name.toLowerCase().includes(keyword));
+          if (!item) return false;
+          const kws = item.keywords || [item.name.split('/')[0].trim().toLowerCase()];
+          return recipe.ingredients.some(ing => {
+            if (item.category !== 'seasoning' && ing.category === 'seasoning') return false;
+            const ingName = ing.name.toLowerCase();
+            return kws.some(kw => ingName.includes(kw.toLowerCase()));
+          });
         });
 
         if (!hasMatch) return false;
@@ -1710,7 +1712,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <article class="recipe-card" data-id="${recipe.id}">
           <div class="card-media-wrap">
-            <img class="card-img" src="${recipe.image}" alt="${recipe.title}">
+            <img class="card-img" src="${recipe.image}" alt="${recipe.title}" onerror="this.onerror=null;if('${recipe.fallbackImage}')this.src='${recipe.fallbackImage}';">
             <div class="card-floating-top">
               <span class="difficulty-badge ${difficultyClass}">${recipe.difficultyTh}</span>
               <button class="bookmark-btn ${isSaved ? 'saved' : ''}" data-id="${recipe.id}" title="${isSaved ? 'นำออกจากเมนูโปรด' : 'บันทึกเป็นเมนูโปรด'}">
@@ -1867,7 +1869,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isSaved = state.savedRecipeIds.has(recipe.id);
       return `
         <div class="draggable-recipe-item" draggable="true" data-id="${recipe.id}">
-          <img class="draggable-thumb" src="${recipe.image}" alt="${recipe.title}">
+          <img class="draggable-thumb" src="${recipe.image}" alt="${recipe.title}" onerror="this.onerror=null;if('${recipe.fallbackImage}')this.src='${recipe.fallbackImage}';">
           <div class="draggable-info">
             <div class="draggable-name">${recipe.title}</div>
             <div class="draggable-meta">
@@ -1958,7 +1960,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="meal-slot-label">${meal.icon} ${meal.th}</div>
             ${recipe ? `
               <div class="filled-meal-card" data-id="${recipe.id}">
-                <img class="filled-thumb" src="${recipe.image}" alt="${recipe.title}">
+                <img class="filled-thumb" src="${recipe.image}" alt="${recipe.title}" onerror="this.onerror=null;if('${recipe.fallbackImage}')this.src='${recipe.fallbackImage}';">
                 <div class="filled-details">
                   <div class="filled-title" title="${recipe.title}">${recipe.title}</div>
                   <div class="filled-kcal">${recipe.calories} kcal</div>

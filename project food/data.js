@@ -700,27 +700,617 @@ const RECIPES_DATA = [
         tip: 'เสิร์ฟร้อนๆ คู่ข้าวกล้องหรือผักลวก'
       }
     ]
+  },
+  {
+    id: 'rec-13',
+    title: 'สเต๊กเนื้อสตริปลอยน์ย่างพริกไทยดำกับเห็ดย่างเนยกระเทียม',
+    titleEn: 'Grilled Striploin Steak with Garlic Herb Mushrooms',
+    category: 'main',
+    calories: 480,
+    prepTime: 10,
+    cookTime: 12,
+    difficulty: 'Medium',
+    difficultyTh: 'ปานกลาง',
+    rating: 4.9,
+    reviewsCount: 195,
+    tags: ['โปรตีนสูง', 'คีโต', 'คลีน'],
+    image: 'images/rec-13.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80',
+    description: 'เนื้อวัวสันนอกออสเตรเลียคัดพิเศษ ย่างระดับมีเดียมแรร์ให้ผิวนอกหอมเกรียม ด้านในนุ่มชุ่มฉ่ำ ทานคู่เห็ดออรินจิและเห็ดแชมปิญองย่างเนยกระเทียมโรสแมรี่ โปรตีนแน่นเต็มอิ่ม',
+    baseServings: 2,
+    macros: {
+      calories: 480,
+      protein: 46,
+      carbs: 8,
+      fat: 28,
+      fiber: 4,
+      sodium: 430
+    },
+    ingredients: [
+      { name: 'เนื้อวัวสันนอก (Striploin)', amount: 350, unit: 'กรัม', category: 'meat' },
+      { name: 'เห็ดออรินจิหั่นชิ้นหนา', amount: 120, unit: 'กรัม', category: 'produce' },
+      { name: 'เห็ดแชมปิญองผ่าครึ่ง', amount: 80, unit: 'กรัม', category: 'produce' },
+      { name: 'น้ำมันมะกอก Extra Virgin', amount: 1.5, unit: 'ช้อนโต๊ะ', category: 'seasoning' },
+      { name: 'เนยสดแท้ชนิดจืด (Grass-fed)', amount: 15, unit: 'กรัม', category: 'seasoning' },
+      { name: 'กระเทียมจีนกลีบใหญ่บุบ', amount: 4, unit: 'กลีบ', category: 'produce' },
+      { name: 'โรสแมรี่สด', amount: 2, unit: 'ก้าน', category: 'produce' },
+      { name: 'เกลือสมุทรหยาบและพริกไทยดำบดสด', amount: 1, unit: 'ช้อนชา', category: 'seasoning' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'เตรียมเนื้อวัวสเต๊ก',
+        text: 'นำเนื้อวัวออกจากตู้เย็นพักไว้ในอุณหภูมิห้อง 15 นาทีก่อนย่าง ซับเนื้อให้แห้ง โรยเกลือสมุทรและพริกไทยดำบดสดให้ทั่วทั้งสองด้าน',
+        timerSeconds: 900,
+        tip: 'การพักเนื้อให้อยู่ในอุณหภูมิห้องจะช่วยให้เนื้อสุกสม่ำเสมอทั่วชิ้น'
+      },
+      {
+        step: 2,
+        title: 'ย่างเนื้อสเต๊ก',
+        text: 'ตั้งกระทะเหล็กหล่อไฟแรงจนมีควันบางๆ ทาน้ำมันมะกอก วางชิ้นเนื้อลงย่างด้านละ 2.5 - 3 นาที ใส่เนย กระเทียม และโรสแมรี่ ตักเนยราดบนผิวเนื้อ (Basting) จนสีน้ำตาลทองสวย นำขึ้นพัก 5 นาที',
+        timerSeconds: 360,
+        tip: 'ต้องพักเนื้อ (Rest) 5 นาทีก่อนหั่น เพื่อให้น้ำเนื้อกระจายตัวกลับสู่ชิ้นเนื้อ ไม่ไหลเยิ้มออกมา'
+      },
+      {
+        step: 3,
+        title: 'ผัดเห็ดย่างเนยกระเทียม',
+        text: 'ใช้กระทะใบเดิมที่มีน้ำมันเนื้อและเนยหอม ใส่เห็ดออรินจิและเห็ดแชมปิญองลงผัดด้วยไฟกลางจนเห็ดสุกเหลืองหอม หั่นสเต๊กเป็นชิ้นเฉียงจัดเสิร์ฟคู่เห็ดย่าง',
+        timerSeconds: 240,
+        tip: 'เห็ดจะดูดซับรสชาติความหอมจากเนยและน้ำเนื้อที่ติดกระทะได้อย่างยอดเยี่ยม'
+      }
+    ]
+  },
+  {
+    id: 'rec-14',
+    title: 'ยำเนื้อย่างองุ่นและมิกซ์เบอร์รี่สดสมุนไพร',
+    titleEn: 'Thai Spicy Grilled Beef Salad with Fresh Berries',
+    category: 'salad',
+    calories: 350,
+    prepTime: 10,
+    cookTime: 6,
+    difficulty: 'Easy',
+    difficultyTh: 'ง่ายมาก',
+    rating: 4.9,
+    reviewsCount: 168,
+    tags: ['< 15 นาที', 'คลีน', 'โปรตีนสูง'],
+    image: 'images/rec-14.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    description: 'เนื้อวัวย่างเตาถ่านสไลซ์พอดีคำ คลุกเคล้าน้ำยำสมุนไพรรสจัดจ้าน เปรี้ยวหวานธรรมชาติจากสตรอว์เบอร์รี บลูเบอร์รีสด และองุ่นไร้เมล็ด หอมสะระแหน่และข้าวคั่ว',
+    baseServings: 2,
+    macros: {
+      calories: 350,
+      protein: 34,
+      carbs: 20,
+      fat: 12,
+      fiber: 5,
+      sodium: 490
+    },
+    ingredients: [
+      { name: 'เนื้อวัวสันในสไลซ์', amount: 260, unit: 'กรัม', category: 'meat' },
+      { name: 'สตรอว์เบอร์รีสดผ่าครึ่ง', amount: 80, unit: 'กรัม', category: 'produce' },
+      { name: 'บลูเบอร์รีสด', amount: 50, unit: 'กรัม', category: 'produce' },
+      { name: 'องุ่นแดงไร้เมล็ดผ่าครึ่ง', amount: 60, unit: 'กรัม', category: 'produce' },
+      { name: 'ผักสลัดมิกซ์และใบสะระแหน่', amount: 100, unit: 'กรัม', category: 'produce' },
+      { name: 'หอมแดงแขกซอย', amount: 2, unit: 'หัว', category: 'produce' },
+      { name: 'น้ำปลาลดโซเดียม', amount: 1.5, unit: 'ช้อนโต๊ะ', category: 'seasoning' },
+      { name: 'น้ำมะนาวคั้นสด', amount: 2, unit: 'ช้อนโต๊ะ', category: 'produce' },
+      { name: 'พริกขี้หนูสวนซอย', amount: 4, unit: 'เม็ด', category: 'produce' },
+      { name: 'ข้าวคั่วสมุนไพร', amount: 1, unit: 'ช้อนชา', category: 'grains' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ย่างเนื้อวัว',
+        text: 'โรยเกลือพริกไทยดำบนเนื้อวัวสันในเล็กน้อย ย่างบนกระทะร้อนจัดด้านละ 2 นาที ให้ด้านนอกเกรียมหอมและด้านในยังคงชุ่มฉ่ำชมพู นำขึ้นพักแล้วหั่นเป็นชิ้นพอดีคำ',
+        timerSeconds: 240,
+        tip: 'ย่างแบบมีเดียมแรร์เพื่อให้เนื้อไม่เหนียวและคงความหวานฉ่ำ'
+      },
+      {
+        step: 2,
+        title: 'ปรุงน้ำยำสมุนไพร',
+        text: 'ผสมน้ำมะนาวสด น้ำปลาลดโซเดียม และพริกขี้หนูซอย คนให้เข้ากัน ชิมรสให้ได้เปรี้ยวนำเค็มกลมกล่อมตามสไตล์ยำไทย',
+        timerSeconds: 60,
+        tip: 'ใช้น้ำมะนาวสดแท้เพื่อความหอมสดชื่น'
+      },
+      {
+        step: 3,
+        title: 'คลุกเคล้าผลไม้และเสิร์ฟ',
+        text: 'ใส่เนื้อวัวย่าง สตรอว์เบอร์รี บลูเบอร์รี องุ่น หอมแดง และใบสะระแหน่ลงในชามผสม ราดน้ำยำและโรยข้าวคั่ว คลุกเบาๆ ตักวางบนผักสลัดพร้อมเสิร์ฟ',
+        timerSeconds: 60,
+        tip: 'คลุกเคล้าเบามือเพื่อไม่ให้ผลไม้สดช้ำ'
+      }
+    ]
+  },
+  {
+    id: 'rec-15',
+    title: 'โบวล์เห็ดรวม 3 อย่างผัดซอสกระเทียมและข้าวไรซ์เบอร์รี่',
+    titleEn: 'Triple Mushroom Teriyaki Riceberry Bowl',
+    category: 'bowl',
+    calories: 340,
+    prepTime: 10,
+    cookTime: 8,
+    difficulty: 'Easy',
+    difficultyTh: 'ง่ายมาก',
+    rating: 4.8,
+    reviewsCount: 140,
+    tags: ['< 15 นาที', 'คลีน', 'มังสวิรัติ', 'งบประหยัด'],
+    image: 'images/rec-15.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&w=800&q=80',
+    description: 'รวมความอร่อยของเห็ดหอมสด เห็ดชิเมจิ และเห็ดออรินจิ ผัดซอสโชยุยูซุกระเทียมพริกไทย เสิร์ฟบนข้าวไรซ์เบอร์รี่ อะโวคาโด ถั่วแระญี่ปุ่น และไข่ออนเซ็นเยิ้มๆ',
+    baseServings: 2,
+    macros: {
+      calories: 340,
+      protein: 18,
+      carbs: 46,
+      fat: 10,
+      fiber: 8,
+      sodium: 420
+    },
+    ingredients: [
+      { name: 'เห็ดออรินจิหั่นเต๋า', amount: 100, unit: 'กรัม', category: 'produce' },
+      { name: 'เห็ดชิเมจิน้ำตาลตัดโคน', amount: 100, unit: 'กรัม', category: 'produce' },
+      { name: 'เห็ดหอมสดหั่นชิ้น', amount: 80, unit: 'กรัม', category: 'produce' },
+      { name: 'ข้าวไรซ์เบอร์รี่หุงสุก', amount: 200, unit: 'กรัม', category: 'grains' },
+      { name: 'ไข่ออนเซ็น', amount: 2, unit: 'ฟอง', category: 'meat' },
+      { name: 'อะโวคาโดหั่นสไลซ์', amount: 0.5, unit: 'ลูก', category: 'produce' },
+      { name: 'ถั่วแระญี่ปุ่นแกะเปลือก', amount: 50, unit: 'กรัม', category: 'produce' },
+      { name: 'โชยุลดโซเดียมและน้ำมันงา', amount: 1.5, unit: 'ช้อนโต๊ะ', category: 'seasoning' },
+      { name: 'งาขาวคั่วและต้นหอมซอย', amount: 1, unit: 'ช้อนโต๊ะ', category: 'produce' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ผัดเห็ดสามสหาย',
+        text: 'ตั้งกระทะใส่น้ำมันงาเล็กน้อย นำเห็ดออรินจิ เห็ดชิเมจิ และเห็ดหอมสดลงผัดด้วยไฟกลางค่อนข้างแรงจนเห็ดเริ่มสุกหอมและมีสีน้ำตาลทองสวย',
+        timerSeconds: 240,
+        tip: 'ใช้ไฟแรงผัดเห็ดเร็วๆ จะช่วยให้น้ำในเห็ดไม่ออกมามาก เห็ดจะหอมกรอบ'
+      },
+      {
+        step: 2,
+        title: 'ปรุงรสซอสโชยุยูซุ',
+        text: 'ราดโชยุลดโซเดียมและพริกไทยดำลงบนเห็ด ผัดคลุกเคล้าให้ซอสเคลือบผิวเห็ดทุกชิ้นอย่างทั่วถึง ปิดไฟยกลง',
+        timerSeconds: 60,
+        tip: 'ใส่โชยุก่อนปิดไฟเล็กน้อยเพื่อให้กลิ่นหอมไหม้กระทะเบาๆ'
+      },
+      {
+        step: 3,
+        title: 'ประกอบโบวล์เพื่อสุขภาพ',
+        text: 'ตักข้าวไรซ์เบอร์รี่ใส่ชาม จัดวางเห็ดผัด อะโวคาโดสไลซ์ และถั่วแระญี่ปุ่น ตอกไข่ออนเซ็นตรงกลาง โรยงาขาวคั่วและต้นหอมซอย พร้อมเสิร์ฟ',
+        timerSeconds: 0,
+        tip: 'คลุกไข่ออนเซ็นกับข้าวไรซ์เบอร์รี่และเห็ดเพื่อรสสัมผัสเนียนนุ่มกลมกล่อม'
+      }
+    ]
+  },
+  {
+    id: 'rec-16',
+    title: 'ซุปครีมเห็ดพอร์โทเบลโลและทรัฟเฟิลสูตรคลีนไร้แป้ง',
+    titleEn: 'Clean Portobello & Truffle Mushroom Soup',
+    category: 'soup',
+    calories: 210,
+    prepTime: 12,
+    cookTime: 15,
+    difficulty: 'Medium',
+    difficultyTh: 'ปานกลาง',
+    rating: 4.9,
+    reviewsCount: 184,
+    tags: ['คลีน', 'คีโต', 'มังสวิรัติ'],
+    image: 'images/rec-16.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80',
+    description: 'ซุปเห็ดพอร์โทเบลโลและเห็ดแชมปิญองเนื้อเนียนละเอียด ปั่นรวมกับดอกกะหล่ำและนมอัลมอนด์ให้ความเข้มข้นแทนแป้งและครีมหนัก ปรุงหอมด้วยน้ำมันเห็ดทรัฟเฟิล',
+    baseServings: 2,
+    macros: {
+      calories: 210,
+      protein: 9,
+      carbs: 14,
+      fat: 12,
+      fiber: 6,
+      sodium: 380
+    },
+    ingredients: [
+      { name: 'เห็ดพอร์โทเบลโลสดหั่นชิ้น', amount: 200, unit: 'กรัม', category: 'produce' },
+      { name: 'เห็ดแชมปิญองสีน้ำตาล', amount: 150, unit: 'กรัม', category: 'produce' },
+      { name: 'ดอกกะหล่ำนึ่งสุก (สำหรับเพิ่มความข้น)', amount: 150, unit: 'กรัม', category: 'produce' },
+      { name: 'นมอัลมอนด์รสจืดหรือนมโอ๊ต', amount: 250, unit: 'มล.', category: 'grains' },
+      { name: 'น้ำซุปผักใส', amount: 300, unit: 'มล.', category: 'seasoning' },
+      { name: 'หอมหัวใหญ่สับและกระเทียม', amount: 2, unit: 'ช้อนโต๊ะ', category: 'produce' },
+      { name: 'น้ำมันเห็ดทรัฟเฟิลบริสุทธิ์', amount: 1, unit: 'ช้อนชา', category: 'seasoning' },
+      { name: 'พาร์สลีย์สดสับและพริกไทยดำ', amount: 1, unit: 'ช้อนชา', category: 'seasoning' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ผัดเห็ดและหอมใหญ่',
+        text: 'ตั้งหม้อผัดหอมใหญ่และกระเทียมด้วยน้ำมันมะกอกจนหอมใส ใส่เห็ดพอร์โทเบลโลและเห็ดแชมปิญองลงผัดจนเห็ดสุกนิ่ม กลิ่นหอมฟุ้ง (แบ่งชิ้นเห็ดสวยๆ เก็บไว้ตกแต่ง 3-4 ชิ้น)',
+        timerSeconds: 300,
+        tip: 'ผัดเห็ดให้สุกเกรียมเล็กน้อยจะสร้างความลึกของรสชาติอูมามิ'
+      },
+      {
+        step: 2,
+        title: 'ต้มและปั่นเนียน',
+        text: 'ใส่ดอกกะหล่ำนึ่ง น้ำซุปผัก และนมอัลมอนด์ลงในหม้อ ต้มเดือด 5 นาที ปิดไฟ ใช้เครื่องปั่นมือถือ (Hand blender) ปั่นจนเนื้อเนียนละเอียดดั่งกำมะหยี่',
+        timerSeconds: 360,
+        tip: 'ดอกกะหล่ำนึ่งสุกเป็นเคล็ดลับความครีมมี่เนียนนุ่มระดับเชฟโดยไม่ต้องใส่แป้งหรือเฮฟวี่ครีม'
+      },
+      {
+        step: 3,
+        title: 'ปรุงรสและแต่งหน้า',
+        text: 'ปรุงรสด้วยเกลือและพริกไทยดำ ตักใส่ถ้วยวางเห็ดผัดที่แบ่งไว้ด้านบน หยดน้ำมันทรัฟเฟิลและโรยพาร์สลีย์สับ เสิร์ฟร้อนๆ',
+        timerSeconds: 0,
+        tip: 'หยดน้ำมันทรัฟเฟิลตอนพร้อมเสิร์ฟทันทีเพื่อคงกลิ่นหอมจรุงใจ'
+      }
+    ]
+  },
+  {
+    id: 'rec-17',
+    title: 'โบวล์ลาบเห็ดรวมเต้าหู้ย่างและผักสดพื้นบ้าน',
+    titleEn: 'Spicy Mixed Mushroom Larb & Grilled Tofu Bowl',
+    category: 'salad',
+    calories: 260,
+    prepTime: 10,
+    cookTime: 6,
+    difficulty: 'Easy',
+    difficultyTh: 'ง่ายมาก',
+    rating: 4.8,
+    reviewsCount: 155,
+    tags: ['< 15 นาที', 'คลีน', 'มังสวิรัติ', 'งบประหยัด'],
+    image: 'images/rec-17.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=800&q=80',
+    description: 'เห็ดเข็มทอง เห็ดหูหนูขาว และเห็ดชิเมจิ ลวกสุกกรุบกรอบ คลุกเคล้าเครื่องลาบพริกป่นคั่วเอง ข้าวคั่วหอมกรุ่น มะนาวสด เคียงเต้าหู้ย่างสีเหลืองทองและแตงกวาแช่เย็น',
+    baseServings: 2,
+    macros: {
+      calories: 260,
+      protein: 18,
+      carbs: 26,
+      fat: 8,
+      fiber: 7,
+      sodium: 440
+    },
+    ingredients: [
+      { name: 'เห็ดชิเมจิขาวและน้ำตาล', amount: 120, unit: 'กรัม', category: 'produce' },
+      { name: 'เห็ดเข็มทองล้างสะอาด', amount: 100, unit: 'กรัม', category: 'produce' },
+      { name: 'เห็ดหูหนูขาวแช่น้ำหั่นชิ้น', amount: 80, unit: 'กรัม', category: 'produce' },
+      { name: 'เต้าหู้ขาวแข็งหั่นเต๋าย่าง', amount: 150, unit: 'กรัม', category: 'meat' },
+      { name: 'ข้าวคั่วข้าวเหนียวดำ', amount: 1.5, unit: 'ช้อนโต๊ะ', category: 'grains' },
+      { name: 'พริกป่นคั่วละเอียด', amount: 1, unit: 'ช้อนชา', category: 'seasoning' },
+      { name: 'น้ำมะนาวสดแท้', amount: 2, unit: 'ช้อนโต๊ะ', category: 'produce' },
+      { name: 'ซีอิ๊วขาวลดโซเดียม', amount: 1.5, unit: 'ช้อนโต๊ะ', category: 'seasoning' },
+      { name: 'ใบสะระแหน่ ผักชีฝรั่ง และแตงกวา', amount: 60, unit: 'กรัม', category: 'produce' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ย่างเต้าหู้และลวกเห็ด',
+        text: 'ย่างเต้าหู้หั่นเต๋าบนกระทะจนผิวกรอบทองทุกด้าน พักไว้ จากนั้นต้มน้ำเดือด นำเห็ดทั้งสามชนิดลงลวกสั้นๆ 1-2 นาที ตักสะเด็ดน้ำให้แห้ง',
+        timerSeconds: 180,
+        tip: 'สะเด็ดน้ำออกจากเห็ดให้แห้งเพื่อไม่ให้น้ำยำเจือจาง'
+      },
+      {
+        step: 2,
+        title: 'ปรุงรสลาบเห็ด',
+        text: 'ใส่เห็ดลวกลงในชามผสม ปรุงรสด้วยซีอิ๊วขาว น้ำมะนาว พริกป่น และข้าวคั่วหอม คลุกเคล้าให้เข้าเนื้ออย่างรวดเร็ว',
+        timerSeconds: 60,
+        tip: 'ใส่ข้าวคั่วตอนท้ายสุดก่อนเสิร์ฟเพื่อคงความกรุบกรอบและหอมฉุน'
+      },
+      {
+        step: 3,
+        title: 'จัดจานพร้อมเต้าหู้ย่าง',
+        text: 'ตักลาบเห็ดใส่ชาม จัดวางเต้าหู้ย่างสีทองรอบๆ โรยใบสะระแหน่และผักชีฝรั่งซอย ทานคู่แตงกวาแช่เย็นสดกรอบ',
+        timerSeconds: 0,
+        tip: 'ทานคู่ผักสดเพื่อเพิ่มไฟเบอร์และความสดชื่นในทุกคำ'
+      }
+    ]
+  },
+  {
+    id: 'rec-18',
+    title: 'อาซาอิเบอร์รี่สมูทตี้โบวล์ผลไม้สดและเมล็ดเจีย',
+    titleEn: 'Superfood Acai Berry & Fresh Fruit Bowl',
+    category: 'bowl',
+    calories: 290,
+    prepTime: 8,
+    cookTime: 0,
+    difficulty: 'Easy',
+    difficultyTh: 'ง่ายมาก',
+    rating: 4.9,
+    reviewsCount: 220,
+    tags: ['< 15 นาที', 'คลีน', 'มังสวิรัติ'],
+    image: 'images/rec-18.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&w=800&q=80',
+    description: 'อาซาอิเบอร์รี่ปั่นกับบลูเบอร์รี กล้วยหอมแช่แข็ง และนมอัลมอนด์จนเนื้อเนียนข้นดั่งไอศกรีม ท็อปปิ้งด้วยผลไม้สดแน่นชาม กีวี่ สตรอว์เบอร์รี มะพร้าวอบกรอบ และเมล็ดเจีย',
+    baseServings: 2,
+    macros: {
+      calories: 290,
+      protein: 7,
+      carbs: 48,
+      fat: 8,
+      fiber: 11,
+      sodium: 35
+    },
+    ingredients: [
+      { name: 'อาซาอิเพียวเร่เข้มข้นแช่แข็ง', amount: 150, unit: 'กรัม', category: 'produce' },
+      { name: 'บลูเบอร์รีแช่แข็ง', amount: 80, unit: 'กรัม', category: 'produce' },
+      { name: 'กล้วยหอมสุกแช่แข็ง', amount: 1, unit: 'ลูก', category: 'produce' },
+      { name: 'นมอัลมอนด์สูตรไม่เติมน้ำตาล', amount: 120, unit: 'มล.', category: 'seasoning' },
+      { name: 'สตรอว์เบอร์รีสดหั่นสไลซ์', amount: 50, unit: 'กรัม', category: 'produce' },
+      { name: 'กีวี่สดหั่นชิ้น', amount: 1, unit: 'ลูก', category: 'produce' },
+      { name: 'เมล็ดเจีย (Chia Seeds)', amount: 1, unit: 'ช้อนโต๊ะ', category: 'grains' },
+      { name: 'มะพร้าวอบกรอบสูตรธรรมชาติ', amount: 15, unit: 'กรัม', category: 'grains' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ปั่นเบสอาซาอิ',
+        text: 'ใส่อาซาอิแช่แข็ง บลูเบอร์รี กล้วยหอมแช่แข็ง และนมอัลมอนด์ลงในโถปั่นความเร็วสูง ใช้ก้านคนช่วยดัน ปั่นจนได้เนื้อเนียนแน่นคล้ายไอศกรีมซอฟต์เสิร์ฟ',
+        timerSeconds: 90,
+        tip: 'ใส่นมอัลมอนด์ให้น้อยที่สุดเพื่อให้เนื้อเบสข้นพอที่จะรองรับท็อปปิ้งผลไม้สดได้ไม่จม'
+      },
+      {
+        step: 2,
+        title: 'เทใส่ชามเย็น',
+        text: 'เทสมูทตี้อาซาอิใส่ชามกว้างที่แช่เย็นไว้ ปาดผิวหน้าให้เรียบเสมอกัน',
+        timerSeconds: 0,
+        tip: 'แช่ชามในตู้เย็น 5 นาทีเพื่อชะลอการละลายของสมูทตี้'
+      },
+      {
+        step: 3,
+        title: 'จัดเรียงผลไม้สดและท็อปปิ้ง',
+        text: 'เรียงบลูเบอร์รี สตรอว์เบอร์รี กีวี่หั่นชิ้น มะพร้าวอบกรอบ และเมล็ดเจียเป็นแถวสวยงาม เสิร์ฟและรับประทานทันที',
+        timerSeconds: 0,
+        tip: 'ทานทันทีเพื่อสัมผัสความเย็นสดชื่นและประโยชน์จากสารต้านอนุมูลอิสระสูงสุด'
+      }
+    ]
+  },
+  {
+    id: 'rec-19',
+    title: 'กรีกโยเกิร์ตมิกซ์เบอร์รี่ครันช์และเมล็ดฟักทอง',
+    titleEn: 'High-Protein Greek Yogurt Berry Crunch',
+    category: 'snack',
+    calories: 295,
+    prepTime: 5,
+    cookTime: 0,
+    difficulty: 'Easy',
+    difficultyTh: 'ง่ายมาก',
+    rating: 4.9,
+    reviewsCount: 205,
+    tags: ['< 15 นาที', 'คลีน', 'โปรตีนสูง', 'งบประหยัด'],
+    image: 'images/rec-19.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80',
+    description: 'กรีกโยเกิร์ตเนื้อเนียนแน่นเข้มข้น โปรตีนสูงกว่า 24 กรัมต่อมื้อ ท็อปด้วยสตรอว์เบอร์รี บลูเบอร์รี ราสเบอร์รีสด กราโนล่าอบกรอบ เมล็ดฟักทอง และราดน้ำผึ้งป่าเดือนห้า',
+    baseServings: 2,
+    macros: {
+      calories: 295,
+      protein: 24,
+      carbs: 32,
+      fat: 8,
+      fiber: 6,
+      sodium: 75
+    },
+    ingredients: [
+      { name: 'กรีกโยเกิร์ตรสธรรมชาติ (ไม่หวาน)', amount: 320, unit: 'กรัม', category: 'meat' },
+      { name: 'ราสเบอร์รีสด', amount: 60, unit: 'กรัม', category: 'produce' },
+      { name: 'บลูเบอร์รีสด', amount: 60, unit: 'กรัม', category: 'produce' },
+      { name: 'สตรอว์เบอร์รีสดหั่นชิ้น', amount: 60, unit: 'กรัม', category: 'produce' },
+      { name: 'กราโนล่าข้าวโอ๊ตน้ำตาลต่ำ', amount: 35, unit: 'กรัม', category: 'grains' },
+      { name: 'เมล็ดฟักทองอบแห้ง', amount: 1, unit: 'ช้อนโต๊ะ', category: 'grains' },
+      { name: 'น้ำผึ้งแท้ดอกไม้ป่า', amount: 1, unit: 'ช้อนชา', category: 'seasoning' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ตักกรีกโยเกิร์ตลงชาม',
+        text: 'ตักกรีกโยเกิร์ตแท้เนื้อข้นใส่ชาม ใช้หลังช้อนเกลี่ยเบาๆ ให้เป็นคลื่นสวยงาม',
+        timerSeconds: 0,
+        tip: 'เลือกกรีกโยเกิร์ตที่มีปริมาณน้ำตาลธรรมชาติต่ำและโปรตีนสูง'
+      },
+      {
+        step: 2,
+        title: 'แต่งหน้าด้วยเบอร์รี่สด 3 ชนิด',
+        text: 'จัดวางราสเบอร์รี สตรอว์เบอร์รี และบลูเบอร์รีสดลงบนหน้าโยเกิร์ต ตามด้วยกราโนล่ากรุบกรอบและเมล็ดฟักทองอบ',
+        timerSeconds: 0,
+        tip: 'เบอร์รี่สดอุดมไปด้วยวิตามินซีและสารแอนโทไซยานินชะลอวัย'
+      },
+      {
+        step: 3,
+        title: 'ราดน้ำผึ้งป่า',
+        text: 'หยดน้ำผึ้งป่าแท้เส้นบางๆ เพิ่มความหอมหวานกลมกล่อม พร้อมรับประทานเป็นมื้อเช้าหรือของว่างคลีน',
+        timerSeconds: 0,
+        tip: 'สามารถพกใส่กล่องไปทานหลังออกกำลังกายเพื่อเติมโปรตีนซ่อมแซมกล้ามเนื้อ'
+      }
+    ]
+  },
+  {
+    id: 'rec-20',
+    title: 'มิกซ์เบอร์รี่สมูทตี้โยเกิร์ตสดดับเบิ้ลโพรไบโอติกส์',
+    titleEn: 'Double Berry Yogurt Glow Smoothie',
+    category: 'snack',
+    calories: 230,
+    prepTime: 5,
+    cookTime: 0,
+    difficulty: 'Easy',
+    difficultyTh: 'ง่ายมาก',
+    rating: 4.8,
+    reviewsCount: 172,
+    tags: ['< 15 นาที', 'คลีน', 'โปรตีนสูง', 'งบประหยัด'],
+    image: 'images/rec-20.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=800&q=80',
+    description: 'สมูทตี้สีม่วงทับทิมสดใส ปั่นจากมิกซ์เบอร์รี่สด กรีกโยเกิร์ตธรรมชาติ กล้วยหอม และนมอัลมอนด์ ได้สารแอนโทไซยานินและโพรไบโอติกส์ช่วยเสริมสร้างลำไส้และผิวพรรณ',
+    baseServings: 2,
+    macros: {
+      calories: 230,
+      protein: 16,
+      carbs: 34,
+      fat: 4,
+      fiber: 7,
+      sodium: 60
+    },
+    ingredients: [
+      { name: 'มิกซ์เบอร์รี่สดและแช่แข็ง (สตรอว์เบอร์รี, บลูเบอร์รี)', amount: 160, unit: 'กรัม', category: 'produce' },
+      { name: 'กรีกโยเกิร์ตธรรมชาติ', amount: 180, unit: 'กรัม', category: 'meat' },
+      { name: 'กล้วยหอมสุกแช่แข็ง', amount: 1, unit: 'ลูก', category: 'produce' },
+      { name: 'นมอัลมอนด์รสจืด', amount: 150, unit: 'มล.', category: 'seasoning' },
+      { name: 'เมล็ดเจียหรือแฟลกซ์บด', amount: 1, unit: 'ช้อนชา', category: 'grains' },
+      { name: 'ใบสะระแหน่สดสำหรับตกแต่ง', amount: 2, unit: 'ยอด', category: 'produce' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ใส่ส่วนผสมลงโถปั่น',
+        text: 'ใส่มิกซ์เบอร์รี่ กรีกโยเกิร์ต กล้วยหอมแช่แข็ง และนมอัลมอนด์ลงในโถปั่นน้ำผลไม้',
+        timerSeconds: 30,
+        tip: 'กล้วยหอมแช่แข็งช่วยให้เนื้อสมูทตี้เนียนข้นโดยไม่ต้องใส่น้ำแข็งเจือจางรสชาติ'
+      },
+      {
+        step: 2,
+        title: 'ปั่นจนเนื้อเนียนละเอียด',
+        text: 'เปิดเครื่องปั่นความเร็วสูง 45-60 วินาทีจนส่วนผสมทั้งหมดเนียนเป็นเนื้อครีมสีม่วงสดใส',
+        timerSeconds: 60,
+        tip: 'หากชอบเนื้อเหลวขึ้นสามารถเติมนมอัลมอนด์เพิ่มได้ตามชอบ'
+      },
+      {
+        step: 3,
+        title: 'เทใส่แก้วและตกแต่ง',
+        text: 'เทสมูทตี้ใส่แก้วทรงสูง ท็อปด้วยบลูเบอร์รี สตรอว์เบอร์รีสด เมล็ดเจีย และใบสะระแหน่ เสิร์ฟทันทีขณะเย็นฉ่ำ',
+        timerSeconds: 0,
+        tip: 'ดื่มทันทีเพื่อรับคุณค่าจากวิตามินซีสดและจุลินทรีย์มีชีวิต'
+      }
+    ]
+  },
+  {
+    id: 'rec-21',
+    title: 'โบวล์ผลไม้สดรวมฤดูกาลกับน้ำสลัดโยเกิร์ตฮันนี่เลมอน',
+    titleEn: 'Rainbow Fresh Fruit Bowl with Honey Lemon Yogurt',
+    category: 'salad',
+    calories: 220,
+    prepTime: 8,
+    cookTime: 0,
+    difficulty: 'Easy',
+    difficultyTh: 'ง่ายมาก',
+    rating: 4.9,
+    reviewsCount: 138,
+    tags: ['< 15 นาที', 'คลีน', 'มังสวิรัติ', 'งบประหยัด'],
+    image: 'images/rec-21.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=800&q=80',
+    description: 'ความสดชื่นเต็มชามจากผลไม้สดคัดพิเศษ แตงโมฉ่ำ กีวี่ทอง เกรปฟรุต เชอร์รี่ สตรอว์เบอร์รี และบลูเบอร์รี ราดน้ำสลัดกรีกโยเกิร์ตผสมน้ำผึ้งและเลมอน หวานอมเปรี้ยวสดชื่น',
+    baseServings: 2,
+    macros: {
+      calories: 220,
+      protein: 8,
+      carbs: 42,
+      fat: 3,
+      fiber: 7,
+      sodium: 45
+    },
+    ingredients: [
+      { name: 'แตงโมสดหั่นชิ้นสามเหลี่ยม', amount: 120, unit: 'กรัม', category: 'produce' },
+      { name: 'กีวี่สดหั่นลายดอกไม้', amount: 1, unit: 'ลูก', category: 'produce' },
+      { name: 'ส้มหรือเกรปฟรุตแกะกลีบ', amount: 80, unit: 'กรัม', category: 'produce' },
+      { name: 'สตรอว์เบอร์รีและเชอร์รี่สด', amount: 100, unit: 'กรัม', category: 'produce' },
+      { name: 'บลูเบอร์รีสด', amount: 50, unit: 'กรัม', category: 'produce' },
+      { name: 'กรีกโยเกิร์ตสำหรับน้ำสลัด', amount: 100, unit: 'กรัม', category: 'meat' },
+      { name: 'น้ำผึ้งแท้และน้ำเลมอนคั้นสด', amount: 1.5, unit: 'ช้อนโต๊ะ', category: 'seasoning' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'หั่นผลไม้สดแช่เย็น',
+        text: 'หั่นแตงโม กีวี่ เกรปฟรุต และสตรอว์เบอร์รีเป็นชิ้นพอดีคำ นำไปแช่เย็นในตู้เย็น 10 นาทีเพื่อความสดฉ่ำ',
+        timerSeconds: 600,
+        tip: 'ผลไม้เย็นๆ จะกรอบหวานชื่นใจและไม่คลายน้ำเร็ว'
+      },
+      {
+        step: 2,
+        title: 'ทำน้ำสลัดโยเกิร์ตฮันนี่เลมอน',
+        text: 'ผสมกรีกโยเกิร์ต น้ำผึ้งแท้ และน้ำเลมอนสด คนให้เนื้อเนียนเข้ากัน ชิมรสให้ได้หวานละมุนอมเปรี้ยวสดชื่น',
+        timerSeconds: 60,
+        tip: 'ใช้น้ำผึ้งแท้ช่วยให้น้ำสลัดมีกลิ่นหอมดอกไม้ธรรมชาติ'
+      },
+      {
+        step: 3,
+        title: 'จัดเสิร์ฟโบวล์ผลไม้สด',
+        text: 'จัดเรียงผลไม้หลากสีสันลงในชามกะลามะพร้าวหรือชามแก้ว เสิร์ฟคู่น้ำสลัดโยเกิร์ต ราดก่อนทานหรือใช้จิ้มทานคู่กัน',
+        timerSeconds: 0,
+        tip: 'ทานเป็นของว่างยามบ่ายแทนขนมหวาน ได้วิตามินและสารต้านอนุมูลอิสระครบถ้วน'
+      }
+    ]
+  },
+  {
+    id: 'rec-22',
+    title: 'เกาเหลาเนื้อตุ๋นสมุนไพรสดเห็ดนางรมหลวงน้ำใส',
+    titleEn: 'Herbal Braised Beef Shank & King Oyster Mushroom Soup',
+    category: 'soup',
+    calories: 340,
+    prepTime: 12,
+    cookTime: 20,
+    difficulty: 'Medium',
+    difficultyTh: 'ปานกลาง',
+    rating: 4.9,
+    reviewsCount: 245,
+    tags: ['โปรตีนสูง', 'คลีน', 'คีโต'],
+    image: 'images/rec-22.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&w=800&q=80',
+    description: 'เนื้อวัวน่องลายตุ๋นสมุนไพรจีนและไทยจนเปื่อยนุ่มเคี้ยวเพลิน น้ำซุปใสกลมกล่อมหอมรากผักชี พริกไทยเม็ด อบเชย พร้อมเห็ดนางรมหลวงหั่นหนาและถั่วงอกสดกรอบ อิ่มโปรตีนแน่นไร้แป้ง',
+    baseServings: 2,
+    macros: {
+      calories: 340,
+      protein: 42,
+      carbs: 10,
+      fat: 14,
+      fiber: 4,
+      sodium: 510
+    },
+    ingredients: [
+      { name: 'เนื้อวัวน่องลายตุ๋นเปื่อย', amount: 280, unit: 'กรัม', category: 'meat' },
+      { name: 'เห็ดนางรมหลวงหั่นแว่น', amount: 120, unit: 'กรัม', category: 'produce' },
+      { name: 'น้ำซุปกระดูกเนื้อตุ๋นยาจีนใส', amount: 600, unit: 'มล.', category: 'seasoning' },
+      { name: 'ถั่วงอกสดและผักบุ้งลวก', amount: 100, unit: 'กรัม', category: 'produce' },
+      { name: 'ซีอิ๊วขาวลดโซเดียมสูตรเห็ดหอม', amount: 2, unit: 'ช้อนโต๊ะ', category: 'seasoning' },
+      { name: 'กระเทียมเจียวน้ำมันรำข้าว', amount: 1, unit: 'ช้อนชา', category: 'seasoning' },
+      { name: 'ขึ้นฉ่ายซอยและต้นหอมผักชี', amount: 2, unit: 'ช้อนโต๊ะ', category: 'produce' },
+      { name: 'พริกไทยดำป่น', amount: 0.5, unit: 'ช้อนชา', category: 'seasoning' }
+    ],
+    steps: [
+      {
+        step: 1,
+        title: 'ต้มน้ำซุปและเห็ดนางรมหลวง',
+        text: 'ตั้งหม้อต้มน้ำซุปกระดูกเนื้อเคี่ยวสมุนไพรให้เดือดพล่าน ใส่เห็ดนางรมหลวงหั่นแว่นลงต้ม 3-4 นาทีจนเห็ดสุกนุ่ม ซึมซับรสหวานของน้ำซุป',
+        timerSeconds: 240,
+        tip: 'เห็ดนางรมหลวงมีความหนึบคล้ายเนื้อสัตว์ เพิ่มสัมผัสเคี้ยวที่สนุก'
+      },
+      {
+        step: 2,
+        title: 'ใส่เนื้อวัวตุ๋นเปื่อย',
+        text: 'ใส่เนื้อวัวน่องลายที่ตุ๋นเปื่อยแล้วลงไปในหม้อ ปรุงรสด้วยซีอิ๊วขาวสูตรเห็ดหอม เคี่ยวต่อ 2 นาทีให้เนื้อดูดน้ำซุปหอมหวาน',
+        timerSeconds: 120,
+        tip: 'เนื้อน่องลายมีเอ็นแทรกละเอียด ตุ๋นจนนุ่มละลายในปากแต่ไม่เลี่ยน'
+      },
+      {
+        step: 3,
+        title: 'ลวกผักและตักเสิร์ฟ',
+        text: 'ลวกถั่วงอกและผักบุ้งใส่ก้นชาม ตักเนื้อตุ๋น เห็ด และน้ำซุปร้อนๆ ราดลงไป โรยขึ้นฉ่าย ต้นหอม พริกไทยดำ และกระเทียมเจียว เสิร์ฟร้อนๆ',
+        timerSeconds: 60,
+        tip: 'สามารถปรุงพริกป่นน้ำส้มสายชูพริกดองเพิ่มความแซ่บคลีนได้ตามใจชอบ'
+      }
+    ]
   }
 ];
 
 // Available Pantry Ingredients for Fridge Filter
 const PANTRY_ITEMS = [
-  { id: 'pantry-chicken', name: 'อกไก่ / เนื้อไก่', icon: '🍗', category: 'meat' },
-  { id: 'pantry-salmon', name: 'แซลมอน / ปลา', icon: '🐟', category: 'meat' },
-  { id: 'pantry-shrimp', name: 'กุ้งสด', icon: '🦐', category: 'meat' },
-  { id: 'pantry-beef', name: 'เนื้อวัว', icon: '🥩', category: 'meat' },
-  { id: 'pantry-egg', name: 'ไข่ไก่', icon: '🥚', category: 'meat' },
-  { id: 'pantry-tofu', name: 'เต้าหู้', icon: '🧈', category: 'meat' },
-  { id: 'pantry-avocado', name: 'อะโวคาโด', icon: '🥑', category: 'produce' },
-  { id: 'pantry-tomato', name: 'มะเขือเทศ', icon: '🍅', category: 'produce' },
-  { id: 'pantry-mushroom', name: 'เห็ดต่างๆ', icon: '🍄', category: 'produce' },
-  { id: 'pantry-cucumber', name: 'แตงกวา', icon: '🥒', category: 'produce' },
-  { id: 'pantry-salad', name: 'ผักสลัด / ผักใบเขียว', icon: '🥬', category: 'produce' },
-  { id: 'pantry-basil', name: 'ใบกะเพรา / โหระพา', icon: '🌿', category: 'produce' },
-  { id: 'pantry-rice', name: 'ข้าวกล้อง / ข้าวไรซ์เบอร์รี่', icon: '🍚', category: 'grains' },
-  { id: 'pantry-bread', name: 'ขนมปัง / ซาวเออร์โดว์', icon: '🍞', category: 'grains' },
-  { id: 'pantry-yogurt', name: 'กรีกโยเกิร์ต', icon: '🥛', category: 'meat' },
-  { id: 'pantry-berries', name: 'เบอร์รี่ / ผลไม้สด', icon: '🍓', category: 'produce' }
+  { id: 'pantry-chicken', name: 'อกไก่ / เนื้อไก่', icon: '🍗', category: 'meat', keywords: ['อกไก่', 'เนื้อไก่', 'ไก่'] },
+  { id: 'pantry-salmon', name: 'แซลมอน / ปลา', icon: '🐟', category: 'meat', keywords: ['แซลมอน', 'ปลา'] },
+  { id: 'pantry-shrimp', name: 'กุ้งสด', icon: '🦐', category: 'meat', keywords: ['กุ้ง'] },
+  { id: 'pantry-beef', name: 'เนื้อวัว', icon: '🥩', category: 'meat', keywords: ['เนื้อวัว', 'วัว', 'beef'] },
+  { id: 'pantry-egg', name: 'ไข่ไก่', icon: '🥚', category: 'meat', keywords: ['ไข่ไก่', 'ไข่ออนเซ็น', 'ไข่'] },
+  { id: 'pantry-tofu', name: 'เต้าหู้', icon: '🧈', category: 'meat', keywords: ['เต้าหู้'] },
+  { id: 'pantry-avocado', name: 'อะโวคาโด', icon: '🥑', category: 'produce', keywords: ['อะโวคาโด'] },
+  { id: 'pantry-tomato', name: 'มะเขือเทศ', icon: '🍅', category: 'produce', keywords: ['มะเขือเทศ'] },
+  { id: 'pantry-mushroom', name: 'เห็ดต่างๆ', icon: '🍄', category: 'produce', keywords: ['เห็ด'] },
+  { id: 'pantry-cucumber', name: 'แตงกวา', icon: '🥒', category: 'produce', keywords: ['แตงกวา'] },
+  { id: 'pantry-salad', name: 'ผักสลัด / ผักใบเขียว', icon: '🥬', category: 'produce', keywords: ['ผักสลัด', 'ร็อกเก็ต', 'ผักโขม', 'ขึ้นฉ่าย', 'ผักบุ้ง'] },
+  { id: 'pantry-basil', name: 'ใบกะเพรา / โหระพา', icon: '🌿', category: 'produce', keywords: ['กะเพรา', 'โหระพา'] },
+  { id: 'pantry-rice', name: 'ข้าวกล้อง / ข้าวไรซ์เบอร์รี่', icon: '🍚', category: 'grains', keywords: ['ข้าว', 'ควินัว'] },
+  { id: 'pantry-bread', name: 'ขนมปัง / ซาวเออร์โดว์', icon: '🍞', category: 'grains', keywords: ['ขนมปัง', 'ซาวเออร์โดว์', 'โทสต์'] },
+  { id: 'pantry-yogurt', name: 'กรีกโยเกิร์ต', icon: '🥛', category: 'meat', keywords: ['โยเกิร์ต', 'yogurt'] },
+  { id: 'pantry-berries', name: 'เบอร์รี่ / ผลไม้สด', icon: '🍓', category: 'produce', keywords: ['สตรอว์เบอร์', 'บลูเบอร์', 'ราสเบอร์', 'เบอร์รี่สด', 'มิกซ์เบอร์รี่', 'อาซาอิ', 'กล้วย', 'กีวี่', 'แตงโม', 'องุ่น', 'เกรปฟรุต', 'แก้วมังกร', 'เชอร์รี่สด'] }
 ];
 
 // Initial Weekly Meal Plan (7 days x 4 meals)
