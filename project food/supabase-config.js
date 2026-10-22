@@ -416,6 +416,84 @@
     }
   }
 
+  // =========================================================================
+  // RECIPE REVIEWS SYSTEM (public.recipe_reviews table)
+  // =========================================================================
+
+  // Get all reviews for a recipe
+  async function getRecipeReviews(recipeId) {
+    if (!supabaseClient) return [];
+    try {
+      const { data, error } = await supabaseClient
+        .from('recipe_reviews')
+        .select('*')
+        .eq('recipe_id', String(recipeId))
+        .order('created_at', { ascending: false });
+
+      if (error || !data) {
+        console.warn('Supabase getRecipeReviews error:', error);
+        return [];
+      }
+      return data;
+    } catch (err) {
+      console.warn('Error fetching recipe reviews:', err);
+      return [];
+    }
+  }
+
+  // Submit or update a review (upsert by recipe_id + user_id)
+  async function submitRecipeReview(recipeId, userId, userName, userPhoto, rating, comment) {
+    if (!supabaseClient) return { success: false, message: 'Supabase ยังไม่ได้เชื่อมต่อ' };
+    try {
+      const payload = {
+        recipe_id: String(recipeId),
+        user_id: String(userId),
+        user_name: userName || 'ผู้ใช้งาน',
+        user_photo: userPhoto || '',
+        rating: Number(rating),
+        comment: (comment || '').trim(),
+        created_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabaseClient
+        .from('recipe_reviews')
+        .upsert(payload, { onConflict: 'recipe_id,user_id' })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase submitRecipeReview error:', error);
+        return { success: false, message: error.message || 'ไม่สามารถส่งรีวิวได้' };
+      }
+
+      return { success: true, data, message: 'บันทึกรีวิวเรียบร้อยแล้ว! ขอบคุณที่ให้ความคิดเห็น 🌟' };
+    } catch (err) {
+      console.error('Error submitting recipe review:', err);
+      return { success: false, message: err.message || 'เกิดข้อผิดพลาด' };
+    }
+  }
+
+  // Delete a review (only own review)
+  async function deleteRecipeReview(recipeId, userId) {
+    if (!supabaseClient) return false;
+    try {
+      const { error } = await supabaseClient
+        .from('recipe_reviews')
+        .delete()
+        .eq('recipe_id', String(recipeId))
+        .eq('user_id', String(userId));
+
+      if (error) {
+        console.error('Supabase deleteRecipeReview error:', error);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.error('Error deleting recipe review:', err);
+      return false;
+    }
+  }
+
   // Try auto-initialization
   if (typeof window !== 'undefined') {
     if (window.supabase) {
@@ -452,7 +530,11 @@
     getUserConsultations,
     getAdminConsultations,
     replyConsultation,
-    getAdminUsers
+    getAdminUsers,
+    // Recipe Reviews
+    getRecipeReviews,
+    submitRecipeReview,
+    deleteRecipeReview
   };
 
 })();

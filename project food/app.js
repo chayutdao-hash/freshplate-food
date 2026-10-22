@@ -2185,6 +2185,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     switchView('detailView');
     renderRecipeDetail(recipeId);
+
+    // Load reviews asynchronously
+    loadRecipeReviews(recipeId);
   }
 
   function renderRecipeDetail(recipeId) {
@@ -2431,6 +2434,238 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast(`เพิ่มวัตถุดิบ ${recipe.ingredients.length} รายการลงใน Shopping List เรียบร้อย!`, '🛒');
     updateShoppingBadgeCount();
   });
+
+  // =========================================================================
+  // 11.5 RECIPE REVIEWS SYSTEM
+  // =========================================================================
+
+  // Helper: render N filled/empty stars
+  function renderStars(rating, maxStars = 5) {
+    let html = '';
+    for (let i = 1; i <= maxStars; i++) {
+      html += `<span style="color:${i <= rating ? '#F59E0B' : '#D1D5DB'};">★</span>`;
+    }
+    return html;
+  }
+
+  // Load + render reviews for the currently displayed recipe
+  async function loadRecipeReviews(recipeId) {
+    const listEl = document.getElementById('reviewsList');
+    const summaryBar = document.getElementById('reviewsSummaryBar');
+    const avgScoreEl = document.getElementById('reviewsAvgScore');
+    const avgStarsEl = document.getElementById('reviewsAvgStars');
+    const summaryCountEl = document.getElementById('reviewsSummaryCount');
+    const totalBadgeEl = document.getElementById('reviewsTotalBadge');
+    const formAreaEl = document.getElementById('reviewFormArea');
+
+    if (!listEl) return;
+    listEl.innerHTML = '<div class="reviews-loading">⏳ กำลังโหลดรีวิว...</div>';
+
+    // Render write-review form or login prompt
+    renderReviewFormArea(recipeId);
+
+    // Load from Supabase if available; else show empty with no-backend note
+    let reviews = [];
+    if (window.SupabaseService && window.SupabaseService.isConfigured()) {
+      reviews = await window.SupabaseService.getRecipeReviews(recipeId);
+    } else {
+      // Not connected to Supabase — show info message
+      listEl.innerHTML = `
+        <div class="reviews-empty">
+          <div class="reviews-empty-icon">🔌</div>
+          <p>เชื่อมต่อ Supabase เพื่อดูและแสดงความคิดเห็นได้นะคะ</p>
+        </div>
+      `;
+      if (totalBadgeEl) totalBadgeEl.textContent = '';
+      if (summaryBar) summaryBar.style.display = 'none';
+      return;
+    }
+
+    // Compute average rating
+    if (reviews.length > 0) {
+      const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+      const avgRounded = Math.round(avg * 10) / 10;
+      if (avgScoreEl) avgScoreEl.textContent = avgRounded.toFixed(1);
+      if (avgStarsEl) avgStarsEl.innerHTML = renderStars(Math.round(avg));
+      if (summaryCountEl) summaryCountEl.textContent = `${reviews.length} รีวิว`;
+      if (summaryBar) summaryBar.style.display = 'flex';
+      if (totalBadgeEl) totalBadgeEl.textContent = `${reviews.length} รีวิว`;
+    } else {
+      if (summaryBar) summaryBar.style.display = 'none';
+      if (totalBadgeEl) totalBadgeEl.textContent = '';
+    }
+
+    // Render review cards
+    if (reviews.length === 0) {
+      listEl.innerHTML = `
+        <div class="reviews-empty">
+          <div class="reviews-empty-icon">💬</div>
+          <p>ยังไม่มีรีวิวสำหรับสูตรนี้ เป็นคนแรกที่แชร์ความคิดเห็นได้เลย!</p>
+        </div>
+      `;
+      return;
+    }
+
+    const currentUserId = state.currentUser ? (state.currentUser.uid || state.currentUser.id) : null;
+
+    listEl.innerHTML = reviews.map((review, idx) => {
+      const isMyReview = currentUserId && String(review.user_id) === String(currentUserId);
+      const dateStr = review.created_at
+        ? (() => { try { return new Date(review.created_at).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }); } catch (e) { return ''; } })()
+        : '';
+
+      const avatarHtml = review.user_photo
+        ? `<img src="${escapeHtml(review.user_photo)}" alt="${escapeHtml(review.user_name)}" referrerpolicy="no-referrer">`
+        : `<span>${(review.user_name || '?').charAt(0).toUpperCase()}</span>`;
+
+      return `
+        <div class="review-card" style="animation-delay:${idx * 0.06}s">
+          <div class="review-card-header">
+            <div class="review-user-info">
+              <div class="review-avatar">${avatarHtml}</div>
+              <div>
+                <div class="review-user-name">
+                  ${escapeHtml(review.user_name || 'ผู้ใช้งาน')}
+                  ${isMyReview ? '<span class="review-my-badge">✨ รีวิวของฉัน</span>' : ''}
+                </div>
+                <div class="review-date">${dateStr}</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+              <div class="review-stars-display">${renderStars(review.rating)}</div>
+              ${isMyReview ? `
+                <button class="btn-delete-review" data-recipe-id="${escapeHtml(review.recipe_id)}" data-user-id="${escapeHtml(review.user_id)}" title="ลบรีวิวของฉัน">
+                  🗑️ ลบ
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          ${review.comment ? `<div class="review-comment">${escapeHtml(review.comment)}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    // Attach delete handlers
+    listEl.querySelectorAll('.btn-delete-review').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const rId = btn.getAttribute('data-recipe-id');
+        const uId = btn.getAttribute('data-user-id');
+        if (!confirm('ต้องการลบรีวิวของคุณหรือไม่?')) return;
+        if (window.SupabaseService) {
+          const ok = await window.SupabaseService.deleteRecipeReview(rId, uId);
+          if (ok) {
+            showToast('ลบรีวิวเรียบร้อยแล้ว', '🗑️');
+            await loadRecipeReviews(state.currentDetailRecipeId);
+          } else {
+            showToast('ลบรีวิวไม่สำเร็จ กรุณาลองใหม่', '⚠️');
+          }
+        }
+      });
+    });
+  }
+
+  function renderReviewFormArea(recipeId) {
+    const formAreaEl = document.getElementById('reviewFormArea');
+    if (!formAreaEl) return;
+
+    if (!state.currentUser) {
+      // Not logged in
+      formAreaEl.innerHTML = `
+        <div class="review-login-prompt">
+          <p>เข้าสู่ระบบเพื่อเขียนรีวิวและให้คะแนนสูตรอาหารนี้ค่ะ ✨</p>
+          <button class="btn-login-to-review" id="btnLoginToReview">
+            🌿 เข้าสู่ระบบเพื่อรีวิว
+          </button>
+        </div>
+      `;
+      const btnLogin = document.getElementById('btnLoginToReview');
+      if (btnLogin) btnLogin.addEventListener('click', () => openAuthModal('login'));
+      return;
+    }
+
+    if (!window.SupabaseService || !window.SupabaseService.isConfigured()) {
+      formAreaEl.innerHTML = '';
+      return;
+    }
+
+    // Logged in — show review form
+    formAreaEl.innerHTML = `
+      <div class="review-form-card">
+        <div class="review-form-title">
+          ✍️ เขียนรีวิวของคุณ
+        </div>
+        <div class="review-form-row">
+          <div>
+            <div class="review-rating-label">⭐ คะแนนความพึงพอใจ</div>
+            <div class="star-rating-input" id="starRatingInput">
+              <input type="radio" name="review_rating_${recipeId}" id="star5_${recipeId}" value="5">
+              <label for="star5_${recipeId}" title="ยอดเยี่ยม">★</label>
+              <input type="radio" name="review_rating_${recipeId}" id="star4_${recipeId}" value="4">
+              <label for="star4_${recipeId}" title="ดีมาก">★</label>
+              <input type="radio" name="review_rating_${recipeId}" id="star3_${recipeId}" value="3">
+              <label for="star3_${recipeId}" title="ดี">★</label>
+              <input type="radio" name="review_rating_${recipeId}" id="star2_${recipeId}" value="2">
+              <label for="star2_${recipeId}" title="พอใช้">★</label>
+              <input type="radio" name="review_rating_${recipeId}" id="star1_${recipeId}" value="1">
+              <label for="star1_${recipeId}" title="ปรับปรุงได้">★</label>
+            </div>
+          </div>
+          <div>
+            <textarea
+              id="reviewCommentInput"
+              class="review-textarea"
+              placeholder="แชร์ประสบการณ์ของคุณกับสูตรนี้... เช่น ทำออกมาอร่อยมาก วัตถุดิบหาง่าย หรือปรับสูตรยังไงให้เข้ากับตัวเองมากขึ้น 😊"
+              maxlength="500"
+            ></textarea>
+          </div>
+          <div class="review-form-actions">
+            <button class="btn-submit-review" id="btnSubmitReview">
+              <span>⭐</span> ส่งรีวิว
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Submit handler
+    const btnSubmit = document.getElementById('btnSubmitReview');
+    if (btnSubmit) {
+      btnSubmit.addEventListener('click', async () => {
+        const ratingInput = document.querySelector(`input[name="review_rating_${recipeId}"]:checked`);
+        const commentInput = document.getElementById('reviewCommentInput');
+        const rating = ratingInput ? parseInt(ratingInput.value) : 0;
+        const comment = commentInput ? commentInput.value.trim() : '';
+
+        if (!rating) {
+          showToast('กรุณาให้คะแนนดาวก่อนส่งรีวิวนะคะ ⭐', '⚠️');
+          return;
+        }
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span>⏳</span> กำลังบันทึก...';
+
+        const user = state.currentUser;
+        const result = await window.SupabaseService.submitRecipeReview(
+          recipeId,
+          user.uid || user.id,
+          user.name,
+          user.photoURL || user.photo_url || '',
+          rating,
+          comment
+        );
+
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<span>⭐</span> ส่งรีวิว';
+
+        if (result.success) {
+          showToast(result.message, '🌟');
+          await loadRecipeReviews(state.currentDetailRecipeId);
+        } else {
+          showToast(result.message || 'ส่งรีวิวไม่สำเร็จ', '⚠️');
+        }
+      });
+    }
+  }
 
   // =========================================================================
   // 12. MODALS: PANTRY SEARCH, SHOPPING LIST & MEAL PICKER
@@ -2877,6 +3112,105 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // =========================================================================
+  // 14. THEME SWITCHER
+  // =========================================================================
+  (function initThemeSwitcher() {
+    const THEME_KEY = 'freshplate_theme';
+    const THEMES = ['light', 'dark', 'ocean', 'sunset'];
+
+    const themePanel = document.getElementById('themePanel');
+    const themePanelBackdrop = document.getElementById('themePanelBackdrop');
+    const btnThemeSwitcher = document.getElementById('btnThemeSwitcher');
+    const btnCloseThemePanel = document.getElementById('btnCloseThemePanel');
+
+    /** Apply a theme to <html> and update all button states */
+    function applyTheme(theme) {
+      if (!THEMES.includes(theme)) theme = 'light';
+
+      // Set data-theme on <html> element
+      if (theme === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+
+      // Update active state on all option buttons
+      THEMES.forEach(t => {
+        const btn = document.getElementById('themeOpt' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) {
+          btn.classList.toggle('active', t === theme);
+        }
+      });
+
+      // Update switcher button emoji to reflect current theme
+      const icons = { light: '🌿', dark: '🌙', ocean: '🌊', sunset: '🌅' };
+      if (btnThemeSwitcher) btnThemeSwitcher.textContent = icons[theme] || '🎨';
+
+      // Persist
+      localStorage.setItem(THEME_KEY, theme);
+    }
+
+    /** Open theme panel */
+    function openThemePanel() {
+      themePanel.classList.add('open');
+      themePanelBackdrop.classList.add('open');
+    }
+
+    /** Close theme panel */
+    function closeThemePanel() {
+      themePanel.classList.remove('open');
+      themePanelBackdrop.classList.remove('open');
+    }
+
+    // Load saved theme on startup
+    const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+    applyTheme(savedTheme);
+
+    // Toggle panel on 🎨 button click
+    if (btnThemeSwitcher) {
+      btnThemeSwitcher.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (themePanel.classList.contains('open')) {
+          closeThemePanel();
+        } else {
+          openThemePanel();
+        }
+      });
+    }
+
+    // Close on X button
+    if (btnCloseThemePanel) {
+      btnCloseThemePanel.addEventListener('click', closeThemePanel);
+    }
+
+    // Close when clicking backdrop
+    if (themePanelBackdrop) {
+      themePanelBackdrop.addEventListener('click', closeThemePanel);
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && themePanel.classList.contains('open')) {
+        closeThemePanel();
+      }
+    });
+
+    // Theme option buttons
+    THEMES.forEach(theme => {
+      const btn = document.getElementById('themeOpt' + theme.charAt(0).toUpperCase() + theme.slice(1));
+      if (btn) {
+        btn.addEventListener('click', () => {
+          applyTheme(theme);
+          const themeNames = { light: 'Light 🌿', dark: 'Dark 🌙', ocean: 'Ocean 🌊', sunset: 'Sunset 🌅' };
+          showToast(`เปลี่ยนธีมเป็น ${themeNames[theme]} เรียบร้อย`, '🎨', 2000);
+          // Close panel after short delay
+          setTimeout(closeThemePanel, 400);
+        });
+      }
+    });
+  })();
 
   // =========================================================================
   // 13. INITIALIZATION
